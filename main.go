@@ -19,6 +19,7 @@ func main() {
 	traktClient := trakt.New(cfg.TraktClientID, cfg.TraktClientSecret, cfg.TraktAccessToken, cfg.TraktRefreshToken)
 
 	http.HandleFunc("/", func(writer http.ResponseWriter, request *http.Request) {
+		// Plex webhooks are always POST
 		if request.Method != "POST" {
 			return
 		}
@@ -35,7 +36,13 @@ func main() {
 			log.Printf("Error unmarshaling webhook body: %s\n", err)
 		}
 
+		// Only send watch request when media has been completely watched
 		if payload.Event != "media.scrobble" {
+			return
+		}
+
+		// Can only handle shows right now
+		if payload.Metadata.LibrarySectionType != "show" {
 			return
 		}
 
