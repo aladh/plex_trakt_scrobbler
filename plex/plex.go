@@ -9,6 +9,7 @@ import (
 type Payload struct {
 	Event    string
 	Metadata Metadata
+	Server   Server
 }
 
 type Metadata struct {
@@ -17,6 +18,10 @@ type Metadata struct {
 	ParentIndex        int
 	Index              int
 	GrandparentGuid    string
+}
+
+type Server struct {
+	UUID string `json:"uuid"`
 }
 
 type ID struct {

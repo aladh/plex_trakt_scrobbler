@@ -36,6 +36,12 @@ func main() {
 			log.Printf("Error unmarshaling webhook body: %s\n", err)
 		}
 
+		// Check that the webhook is coming from the right server
+		if payload.Server.UUID != cfg.PlexServerUUID {
+			log.Printf("Unauthorized request from server: %s\n", payload.Server.UUID)
+			return
+		}
+
 		// Only send watch request when media has been completely watched
 		if payload.Event != "media.scrobble" {
 			return

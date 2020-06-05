@@ -10,6 +10,7 @@ type Config struct {
 	TraktClientSecret string
 	TraktAccessToken  string
 	TraktRefreshToken string
+	PlexServerUUID    string
 }
 
 func FromEnv() (*Config, error) {
@@ -33,11 +34,17 @@ func FromEnv() (*Config, error) {
 		return nil, err
 	}
 
+	plexServerUUID, err := getEnvString("PLEX_SERVER_UUID")
+	if err != nil {
+		return nil, err
+	}
+
 	return &Config{
 		TraktClientID:     traktClientID,
 		TraktClientSecret: traktClientSecret,
 		TraktAccessToken:  traktAccessToken,
 		TraktRefreshToken: traktRefreshToken,
+		PlexServerUUID:    plexServerUUID,
 	}, nil
 }
 
