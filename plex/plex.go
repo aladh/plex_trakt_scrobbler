@@ -42,7 +42,7 @@ func (m *Metadata) Episode() int {
 }
 
 func (m *Metadata) ID() ID {
-	re := regexp.MustCompile(".*\\.(.*)://(.*)\\?")
+	re := regexp.MustCompile(`.*\.(.*)://(.*)\?`)
 	matches := re.FindStringSubmatch(m.GrandparentGuid)
 
 	value, err := strconv.Atoi(matches[2])
