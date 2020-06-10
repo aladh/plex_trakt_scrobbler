@@ -17,7 +17,7 @@ type Metadata struct {
 	GrandparentTitle   string
 	ParentIndex        int
 	Index              int
-	GrandparentGuid    string
+	GrandparentGUID    string
 }
 
 type Server struct {
@@ -43,11 +43,11 @@ func (m *Metadata) Episode() int {
 
 func (m *Metadata) ID() ID {
 	re := regexp.MustCompile(`.*\.(.*)://(.*)\?`)
-	matches := re.FindStringSubmatch(m.GrandparentGuid)
+	matches := re.FindStringSubmatch(m.GrandparentGUID)
 
 	value, err := strconv.Atoi(matches[2])
 	if err != nil {
-		log.Printf("Error getting value from %s\n", m.GrandparentGuid)
+		log.Printf("Error getting value from %s\n", m.GrandparentGUID)
 	}
 
 	return ID{
