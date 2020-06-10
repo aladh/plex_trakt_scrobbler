@@ -60,6 +60,8 @@ func main() {
 		}
 	})
 
+	log.Println("Starting server")
+
 	err = http.ListenAndServe(":5678", nil)
 	if err != nil {
 		log.Fatalf("Error starting web server: %s", err)
