@@ -12,7 +12,7 @@ import (
 
 	"golang.org/x/oauth2"
 
-	"github.com/ali-l/plex-trakt-scrobbler/plex"
+	"github.com/ali-l/plex_trakt_scrobbler/plex"
 )
 
 type Trakt struct {
