@@ -41,6 +41,8 @@ cloud-run:
     - docker tag $SOURCE_IMAGE $DESTINATION_IMAGE
     - docker push $DESTINATION_IMAGE
     - gcloud run deploy $SERVICE_NAME --project $GCP_PROJECT_ID --platform managed --region $GCP_REGION --image $DESTINATION_IMAGE
+  after_script:
+    - gcloud container images delete $DESTINATION_IMAGE --force-delete-tags
   environment:
     name: production
   only:
