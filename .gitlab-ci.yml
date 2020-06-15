@@ -25,17 +25,22 @@ container-image:
 
 cloud-run:
   stage: deploy
-  image: google/cloud-sdk
+  image: docker:latest
+  services:
+    - docker:dind
   variables:
     SOURCE_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
     DESTINATION_IMAGE: us.gcr.io/$GCP_PROJECT_ID/$CI_PROJECT_NAME:$CI_COMMIT_SHORT_SHA
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker login -u _json_key -p "$(cat $SERVICE_ACCOUNT)" https://us.gcr.io
+    - wget https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz
+    - tar zxvf google-cloud-sdk.tar.gz && ./google-cloud-sdk/install.sh --usage-reporting=false --path-update=true
+    - source /root/.bashrc
+  script:
     - docker pull $SOURCE_IMAGE
     - docker tag $SOURCE_IMAGE $DESTINATION_IMAGE
     - docker push $DESTINATION_IMAGE
-  script:
     - gcloud auth activate-service-account --key-file $$SERVICE_ACCOUNT
     - gcloud run deploy $SERVICE_NAME --image $DESTINATION_IMAGE
   environment:
