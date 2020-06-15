@@ -35,7 +35,7 @@ cloud-run:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker login -u _json_key -p "$(cat $SERVICE_ACCOUNT)" https://us.gcr.io
     - wget https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz
-    - tar zxvf google-cloud-sdk.tar.gz && ./google-cloud-sdk/install.sh --usage-reporting=false --path-update=true
+    - tar -xzf google-cloud-sdk.tar.gz && ./google-cloud-sdk/install.sh --usage-reporting=false --path-update=true
     - source /root/.bashrc
   script:
     - docker pull $SOURCE_IMAGE
