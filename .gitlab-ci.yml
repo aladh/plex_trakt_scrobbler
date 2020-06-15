@@ -40,7 +40,7 @@ cloud-run:
     - docker pull $SOURCE_IMAGE
     - docker tag $SOURCE_IMAGE $DESTINATION_IMAGE
     - docker push $DESTINATION_IMAGE
-    - gcloud run deploy $SERVICE_NAME --image $DESTINATION_IMAGE
+    - gcloud run deploy $SERVICE_NAME --image $DESTINATION_IMAGE --platform managed --region $GCP_REGION
   environment:
     name: production
   only:
