@@ -1,7 +1,7 @@
 package plex
 
 import (
-	"log"
+	"fmt"
 	"regexp"
 	"strconv"
 )
@@ -43,16 +43,13 @@ func (m *Metadata) Episode() int {
 	return m.Index
 }
 
-func (m *Metadata) ID() ID {
+func (m *Metadata) ID() (*ID, error) {
 	matches := idRegex.FindStringSubmatch(m.GrandparentGUID)
 
 	value, err := strconv.Atoi(matches[2])
 	if err != nil {
-		log.Printf("Error getting value from %s\n", m.GrandparentGUID)
+		return nil, fmt.Errorf("error converting to integer: %w", err)
 	}
 
-	return ID{
-		Provider: matches[1],
-		Value:    value,
-	}
+	return &ID{Provider: matches[1], Value: value}, nil
 }

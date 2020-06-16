@@ -54,7 +54,13 @@ func main() {
 
 		log.Printf("Received scrobble: %v\n", payload)
 
-		err = traktClient.WatchShow(payload.Metadata.ID(), payload.Metadata.Season(), payload.Metadata.Episode())
+		id, err := payload.Metadata.ID()
+		if err != nil {
+			log.Printf("Error parsing ID: %s\n", err)
+			return
+		}
+
+		err = traktClient.WatchShow(id, payload.Metadata.Season(), payload.Metadata.Episode())
 		if err != nil {
 			log.Printf("Error watching show: %s\n", err)
 		}

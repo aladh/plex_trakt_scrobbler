@@ -35,7 +35,7 @@ func New(clientID string, clientSecret string, accessToken string, refreshToken 
 	return &Trakt{client: client, clientID: clientID}
 }
 
-func (t *Trakt) WatchShow(id plex.ID, season int, episode int) error {
+func (t *Trakt) WatchShow(id *plex.ID, season int, episode int) error {
 	reqStruct := newWatchShowRequest(id.Value, season, episode, time.Now().UTC())
 
 	reqBody, err := json.Marshal(reqStruct)
