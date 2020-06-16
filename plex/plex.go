@@ -29,6 +29,8 @@ type ID struct {
 	Value    int
 }
 
+var idRegex = regexp.MustCompile(`.*\.(.*)://(.*)\?`)
+
 func (m *Metadata) Title() string {
 	return m.GrandparentTitle
 }
@@ -42,8 +44,7 @@ func (m *Metadata) Episode() int {
 }
 
 func (m *Metadata) ID() ID {
-	re := regexp.MustCompile(`.*\.(.*)://(.*)\?`)
-	matches := re.FindStringSubmatch(m.GrandparentGUID)
+	matches := idRegex.FindStringSubmatch(m.GrandparentGUID)
 
 	value, err := strconv.Atoi(matches[2])
 	if err != nil {
