@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -69,9 +70,9 @@ func main() {
 		}
 	})
 
-	log.Println("Starting server")
+	log.Printf("Starting server on port %s\n", cfg.Port)
 
-	err = http.ListenAndServe(":5678", nil)
+	err = http.ListenAndServe(fmt.Sprintf(":%s", cfg.Port), nil)
 	if err != nil {
 		log.Fatalf("Error starting web server: %s", err)
 	}
