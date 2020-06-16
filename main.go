@@ -27,6 +27,7 @@ func main() {
 		err := request.ParseMultipartForm(10_000)
 		if err != nil {
 			log.Printf("Error parsing webhook form: %s\n", err)
+			return
 		}
 
 		var payload plex.Payload
@@ -34,6 +35,7 @@ func main() {
 		err = json.Unmarshal([]byte(request.FormValue("payload")), &payload)
 		if err != nil {
 			log.Printf("Error unmarshaling webhook body: %s\n", err)
+			return
 		}
 
 		// Check that the webhook is coming from the right server
@@ -63,6 +65,7 @@ func main() {
 		err = traktClient.WatchShow(id, payload.Metadata.Season(), payload.Metadata.Episode())
 		if err != nil {
 			log.Printf("Error watching show: %s\n", err)
+			return
 		}
 	})
 
