@@ -2,7 +2,7 @@ package plex
 
 import "log"
 
-func ShouldProcess(payload Payload, serverUUID string) bool {
+func ShouldProcess(payload *Payload, serverUUID string) bool {
 	// Check that the webhook is coming from the right server
 	if payload.Server.UUID != serverUUID {
 		log.Printf("Unauthorized request from server: %s\n", payload.Server.UUID)

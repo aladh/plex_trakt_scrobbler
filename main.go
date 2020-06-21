@@ -36,17 +36,9 @@ func handler(cfg *config.Config, traktClient *trakt.Trakt) func(writer http.Resp
 			return
 		}
 
-		err := request.ParseMultipartForm(10_000)
+		payload, err := parsePayload(request)
 		if err != nil {
-			log.Printf("Error parsing webhook form: %s\n", err)
-			return
-		}
-
-		var payload plex.Payload
-
-		err = json.Unmarshal([]byte(request.FormValue("payload")), &payload)
-		if err != nil {
-			log.Printf("Error unmarshaling webhook body: %s\n", err)
+			log.Printf("Error parsing webhook payload: %s\n", err)
 			return
 		}
 
@@ -68,4 +60,20 @@ func handler(cfg *config.Config, traktClient *trakt.Trakt) func(writer http.Resp
 			return
 		}
 	}
+}
+
+func parsePayload(request *http.Request) (*plex.Payload, error) {
+	err := request.ParseMultipartForm(10_000)
+	if err != nil {
+		return nil, fmt.Errorf("error parsing multipart form: %w", err)
+	}
+
+	var payload plex.Payload
+
+	err = json.Unmarshal([]byte(request.FormValue("payload")), &payload)
+	if err != nil {
+		return nil, fmt.Errorf("error unmarshaling webhook payload: %w", err)
+	}
+
+	return &payload, nil
 }
