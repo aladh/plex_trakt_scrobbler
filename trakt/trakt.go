@@ -11,8 +11,6 @@ import (
 	"time"
 
 	"golang.org/x/oauth2"
-
-	"github.com/ali-l/plex_trakt_scrobbler/plex"
 )
 
 type Trakt struct {
@@ -35,8 +33,8 @@ func New(clientID string, clientSecret string, accessToken string, refreshToken 
 	return &Trakt{client: client, clientID: clientID}
 }
 
-func (t *Trakt) WatchShow(id *plex.ID, season int, episode int) error {
-	reqStruct := newWatchShowRequest(id.Value, season, episode, time.Now().UTC())
+func (t *Trakt) WatchShow(id int, season int, episode int) error {
+	reqStruct := newWatchShowRequest(id, season, episode, time.Now().UTC())
 
 	reqBody, err := json.Marshal(reqStruct)
 	if err != nil {

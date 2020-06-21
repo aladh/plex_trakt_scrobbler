@@ -63,7 +63,7 @@ func main() {
 			return
 		}
 
-		err = traktClient.WatchShow(id, payload.Metadata.Season(), payload.Metadata.Episode())
+		err = traktClient.WatchShow(id.Value, payload.Metadata.Season(), payload.Metadata.Episode())
 		if err != nil {
 			log.Printf("Error watching show: %s\n", err)
 			return
