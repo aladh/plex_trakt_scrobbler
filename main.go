@@ -19,7 +19,18 @@ func main() {
 
 	traktClient := trakt.New(cfg.TraktClientID, cfg.TraktClientSecret, cfg.TraktAccessToken, cfg.TraktRefreshToken)
 
-	http.HandleFunc("/", func(writer http.ResponseWriter, request *http.Request) {
+	http.HandleFunc("/", handler(cfg, traktClient))
+
+	log.Printf("Starting server on port %s\n", cfg.Port)
+
+	err = http.ListenAndServe(fmt.Sprintf(":%s", cfg.Port), nil)
+	if err != nil {
+		log.Fatalf("Error starting web server: %s", err)
+	}
+}
+
+func handler(cfg *config.Config, traktClient *trakt.Trakt) func(writer http.ResponseWriter, request *http.Request) {
+	return func(writer http.ResponseWriter, request *http.Request) {
 		// Plex webhooks are always POST
 		if request.Method != "POST" {
 			return
@@ -56,12 +67,5 @@ func main() {
 			log.Printf("Error watching show: %s\n", err)
 			return
 		}
-	})
-
-	log.Printf("Starting server on port %s\n", cfg.Port)
-
-	err = http.ListenAndServe(fmt.Sprintf(":%s", cfg.Port), nil)
-	if err != nil {
-		log.Fatalf("Error starting web server: %s", err)
 	}
 }
