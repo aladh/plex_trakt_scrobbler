@@ -33,15 +33,15 @@ func New(clientID string, clientSecret string, accessToken string, refreshToken 
 	return &Trakt{client: client, clientID: clientID}
 }
 
-func (t *Trakt) WatchShow(id int, season int, episode int) error {
-	reqStruct := newWatchShowRequest(id, season, episode, time.Now().UTC())
+func (t *Trakt) WatchEpisode(id int, season int, episode int) error {
+	reqStruct := watchEpisodeRequest(id, season, episode, time.Now().UTC())
 
 	reqBody, err := json.Marshal(reqStruct)
 	if err != nil {
 		return fmt.Errorf("error marshalling trakt request: %w", err)
 	}
 
-	log.Printf("Sending watched show: %s\n", string(reqBody))
+	log.Printf("Sending watched episode: %s\n", string(reqBody))
 
 	req, err := http.NewRequest("POST", "https://api.trakt.tv/sync/history", bytes.NewReader(reqBody))
 	if err != nil {

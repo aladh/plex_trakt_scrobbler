@@ -2,7 +2,7 @@ package trakt
 
 import "time"
 
-type WatchShowRequest struct {
+type WatchEpisodeRequest struct {
 	Shows []Show `json:"shows"`
 }
 
@@ -25,8 +25,8 @@ type Episode struct {
 	WatchedAt string `json:"watched_at"`
 }
 
-func newWatchShowRequest(id, season, episode int, watchedAt time.Time) *WatchShowRequest {
-	return &WatchShowRequest{
+func watchEpisodeRequest(id, season, episode int, watchedAt time.Time) *WatchEpisodeRequest {
+	return &WatchEpisodeRequest{
 		Shows: []Show{
 			{
 				Ids: IDs{Tvdb: id},

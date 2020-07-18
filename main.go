@@ -54,9 +54,9 @@ func handler(cfg *config.Config, traktClient *trakt.Trakt) func(writer http.Resp
 			return
 		}
 
-		err = traktClient.WatchShow(id.Value, payload.Metadata.Season(), payload.Metadata.Episode())
+		err = traktClient.WatchEpisode(id.Value, payload.Metadata.Season(), payload.Metadata.Episode())
 		if err != nil {
-			log.Printf("Error watching show: %s\n", err)
+			log.Printf("Error watching episode: %s\n", err)
 			return
 		}
 	}
