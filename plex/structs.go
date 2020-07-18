@@ -4,6 +4,8 @@ import (
 	"regexp"
 )
 
+const showType = "show"
+
 type Payload struct {
 	Event    string
 	Metadata Metadata
