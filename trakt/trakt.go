@@ -34,52 +34,45 @@ func New(clientID string, clientSecret string, accessToken string, refreshToken 
 }
 
 func (t *Trakt) WatchEpisode(id string, season int, episode int) error {
-	reqStruct := watchEpisodeRequest(id, season, episode, time.Now().UTC())
-
-	reqBody, err := json.Marshal(reqStruct)
+	reqBody, err := json.Marshal(watchEpisodeRequest(id, season, episode, time.Now().UTC()))
 	if err != nil {
 		return fmt.Errorf("error marshalling trakt request: %w", err)
 	}
 
 	log.Printf("Sending watched episode: %s\n", string(reqBody))
 
-	req, err := http.NewRequest("POST", "https://api.trakt.tv/sync/history", bytes.NewReader(reqBody))
+	resBody, err := t.watchMedia(reqBody)
 	if err != nil {
-		return fmt.Errorf("error creating trakt request: %w", err)
+		return err
 	}
 
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("trakt-api-version", "2")
-	req.Header.Set("trakt-api-key", t.clientID)
-
-	res, err := t.client.Do(req)
-	if err != nil {
-		return fmt.Errorf("error sending request to trakt: %w", err)
-	}
-
-	b, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		return fmt.Errorf("error reading trakt response body: %w", err)
-	}
-
-	log.Printf("Got response: %s\n", string(b))
+	log.Printf("Got response: %s\n", string(resBody))
 
 	return nil
 }
 
 func (t *Trakt) WatchMovie(id string) error {
-	reqStruct := watchMovieRequest(id, time.Now().UTC())
-
-	reqBody, err := json.Marshal(reqStruct)
+	reqBody, err := json.Marshal(watchMovieRequest(id, time.Now().UTC()))
 	if err != nil {
 		return fmt.Errorf("error marshalling trakt request: %w", err)
 	}
 
 	log.Printf("Sending watched movie: %s\n", string(reqBody))
 
+	resBody, err := t.watchMedia(reqBody)
+	if err != nil {
+		return err
+	}
+
+	log.Printf("Got response: %s\n", string(resBody))
+
+	return nil
+}
+
+func (t *Trakt) watchMedia(reqBody []byte) ([]byte, error) {
 	req, err := http.NewRequest("POST", "https://api.trakt.tv/sync/history", bytes.NewReader(reqBody))
 	if err != nil {
-		return fmt.Errorf("error creating trakt request: %w", err)
+		return nil, fmt.Errorf("error creating trakt request: %w", err)
 	}
 
 	req.Header.Set("Content-Type", "application/json")
@@ -88,15 +81,13 @@ func (t *Trakt) WatchMovie(id string) error {
 
 	res, err := t.client.Do(req)
 	if err != nil {
-		return fmt.Errorf("error sending request to trakt: %w", err)
+		return nil, fmt.Errorf("error sending request to trakt: %w", err)
 	}
 
-	b, err := ioutil.ReadAll(res.Body)
+	resBody, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		return fmt.Errorf("error reading trakt response body: %w", err)
+		return nil, fmt.Errorf("error reading trakt response body: %w", err)
 	}
 
-	log.Printf("Got response: %s\n", string(b))
-
-	return nil
+	return resBody, nil
 }
