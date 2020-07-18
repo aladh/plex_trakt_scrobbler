@@ -2,17 +2,15 @@ package trakt
 
 import "time"
 
+const tvdb = "tvdb"
+
 type WatchEpisodeRequest struct {
 	Shows []Show `json:"shows"`
 }
 
 type Show struct {
-	Ids     IDs      `json:"ids"`
-	Seasons []Season `json:"seasons"`
-}
-
-type IDs struct {
-	Tvdb string `json:"tvdb"`
+	Ids     map[string]string `json:"ids"`
+	Seasons []Season          `json:"seasons"`
 }
 
 type Season struct {
@@ -29,7 +27,7 @@ func watchEpisodeRequest(id string, season, episode int, watchedAt time.Time) *W
 	return &WatchEpisodeRequest{
 		Shows: []Show{
 			{
-				Ids: IDs{Tvdb: id},
+				Ids: map[string]string{tvdb: id},
 				Seasons: []Season{
 					{
 						Number: season,

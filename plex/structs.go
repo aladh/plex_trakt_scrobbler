@@ -13,11 +13,11 @@ type Payload struct {
 }
 
 type Metadata struct {
-	LibrarySectionType string
-	GrandparentTitle   string
-	ParentIndex        int
-	Index              int
 	GrandparentGUID    string
+	GrandparentTitle   string
+	Index              int
+	LibrarySectionType string
+	ParentIndex        int
 }
 
 type Server struct {
@@ -29,7 +29,7 @@ type ID struct {
 	Value    string
 }
 
-var idRegex = regexp.MustCompile(`.*\.(.*)://(.*)\?`)
+var idRegex = regexp.MustCompile(`.*://(.*)\?`)
 
 func (m *Metadata) Title() string {
 	return m.GrandparentTitle
@@ -43,8 +43,10 @@ func (m *Metadata) Episode() int {
 	return m.Index
 }
 
-func (m *Metadata) ID() *ID {
-	matches := idRegex.FindStringSubmatch(m.GrandparentGUID)
+func (m *Metadata) ID() string {
+	guid := m.GrandparentGUID
 
-	return &ID{Provider: matches[1], Value: matches[2]}
+	matches := idRegex.FindStringSubmatch(guid)
+
+	return matches[1]
 }
