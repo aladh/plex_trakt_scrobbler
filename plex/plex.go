@@ -14,10 +14,5 @@ func ShouldProcess(payload *Payload, serverUUID string) bool {
 		return false
 	}
 
-	// Can only handle shows right now
-	if payload.Metadata.LibrarySectionType != showType {
-		return false
-	}
-
 	return true
 }

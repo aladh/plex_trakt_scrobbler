@@ -48,10 +48,18 @@ func handler(cfg *config.Config, traktClient *trakt.Trakt) func(writer http.Resp
 
 		log.Printf("Received scrobble: %v\n", payload)
 
-		err = traktClient.WatchEpisode(payload.Metadata.ID(), payload.Metadata.Season(), payload.Metadata.Episode())
-		if err != nil {
-			log.Printf("Error watching episode: %s\n", err)
-			return
+		if payload.Type() == plex.ShowType {
+			err = traktClient.WatchEpisode(payload.Metadata.ID(), payload.Metadata.Season(), payload.Metadata.Episode())
+			if err != nil {
+				log.Printf("Error watching episode: %s\n", err)
+				return
+			}
+		} else {
+			err = traktClient.WatchMovie(payload.Metadata.ID())
+			if err != nil {
+				log.Printf("Error watching movie: %s\n", err)
+				return
+			}
 		}
 	}
 }

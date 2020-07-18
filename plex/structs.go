@@ -4,7 +4,8 @@ import (
 	"regexp"
 )
 
-const showType = "show"
+const ShowType = "show"
+const movieType = "movie"
 
 type Payload struct {
 	Event    string
@@ -15,6 +16,7 @@ type Payload struct {
 type Metadata struct {
 	GrandparentGUID    string
 	GrandparentTitle   string
+	GUID               string
 	Index              int
 	LibrarySectionType string
 	ParentIndex        int
@@ -31,6 +33,10 @@ type ID struct {
 
 var idRegex = regexp.MustCompile(`.*://(.*)\?`)
 
+func (p *Payload) Type() string {
+	return p.Metadata.LibrarySectionType
+}
+
 func (m *Metadata) Title() string {
 	return m.GrandparentTitle
 }
@@ -45,6 +51,10 @@ func (m *Metadata) Episode() int {
 
 func (m *Metadata) ID() string {
 	guid := m.GrandparentGUID
+
+	if m.LibrarySectionType == movieType {
+		guid = m.GUID
+	}
 
 	matches := idRegex.FindStringSubmatch(guid)
 

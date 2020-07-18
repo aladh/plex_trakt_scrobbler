@@ -66,3 +66,37 @@ func (t *Trakt) WatchEpisode(id string, season int, episode int) error {
 
 	return nil
 }
+
+func (t *Trakt) WatchMovie(id string) error {
+	reqStruct := watchMovieRequest(id, time.Now().UTC())
+
+	reqBody, err := json.Marshal(reqStruct)
+	if err != nil {
+		return fmt.Errorf("error marshalling trakt request: %w", err)
+	}
+
+	log.Printf("Sending watched movie: %s\n", string(reqBody))
+
+	req, err := http.NewRequest("POST", "https://api.trakt.tv/sync/history", bytes.NewReader(reqBody))
+	if err != nil {
+		return fmt.Errorf("error creating trakt request: %w", err)
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("trakt-api-version", "2")
+	req.Header.Set("trakt-api-key", t.clientID)
+
+	res, err := t.client.Do(req)
+	if err != nil {
+		return fmt.Errorf("error sending request to trakt: %w", err)
+	}
+
+	b, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return fmt.Errorf("error reading trakt response body: %w", err)
+	}
+
+	log.Printf("Got response: %s\n", string(b))
+
+	return nil
+}
