@@ -84,6 +84,10 @@ func (t *Trakt) watchMedia(reqBody []byte) ([]byte, error) {
 		return nil, fmt.Errorf("error sending request to trakt: %w", err)
 	}
 
+	if res.StatusCode != 201 {
+		return nil, fmt.Errorf("received bad response code %d", res.StatusCode)
+	}
+
 	resBody, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		return nil, fmt.Errorf("error reading trakt response body: %w", err)
