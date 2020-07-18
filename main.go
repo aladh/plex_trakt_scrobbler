@@ -48,18 +48,9 @@ func handler(cfg *config.Config, traktClient *trakt.Trakt) func(writer http.Resp
 
 		log.Printf("Received scrobble: %v\n", payload)
 
-		if payload.Type() == plex.ShowType {
-			err = traktClient.WatchEpisode(payload.Metadata.ID(), payload.Metadata.Season(), payload.Metadata.Episode())
-			if err != nil {
-				log.Printf("Error watching episode: %s\n", err)
-				return
-			}
-		} else {
-			err = traktClient.WatchMovie(payload.Metadata.ID())
-			if err != nil {
-				log.Printf("Error watching movie: %s\n", err)
-				return
-			}
+		err = watchMedia(payload, traktClient)
+		if err != nil {
+			log.Printf("Error watching media: %s\n", err)
 		}
 	}
 }
@@ -78,4 +69,20 @@ func parsePayload(request *http.Request) (*plex.Payload, error) {
 	}
 
 	return &payload, nil
+}
+
+func watchMedia(payload *plex.Payload, traktClient *trakt.Trakt) error {
+	var err error
+
+	if payload.Type() == plex.ShowType {
+		err = traktClient.WatchEpisode(payload.Metadata.ID(), payload.Metadata.Season(), payload.Metadata.Episode())
+	} else {
+		err = traktClient.WatchMovie(payload.Metadata.ID())
+	}
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
