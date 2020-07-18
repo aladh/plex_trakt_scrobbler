@@ -12,7 +12,7 @@ type Show struct {
 }
 
 type IDs struct {
-	Tvdb int `json:"tvdb"`
+	Tvdb string `json:"tvdb"`
 }
 
 type Season struct {
@@ -25,7 +25,7 @@ type Episode struct {
 	WatchedAt string `json:"watched_at"`
 }
 
-func watchEpisodeRequest(id, season, episode int, watchedAt time.Time) *WatchEpisodeRequest {
+func watchEpisodeRequest(id string, season, episode int, watchedAt time.Time) *WatchEpisodeRequest {
 	return &WatchEpisodeRequest{
 		Shows: []Show{
 			{

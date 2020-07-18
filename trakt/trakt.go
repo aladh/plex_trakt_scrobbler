@@ -33,7 +33,7 @@ func New(clientID string, clientSecret string, accessToken string, refreshToken 
 	return &Trakt{client: client, clientID: clientID}
 }
 
-func (t *Trakt) WatchEpisode(id int, season int, episode int) error {
+func (t *Trakt) WatchEpisode(id string, season int, episode int) error {
 	reqStruct := watchEpisodeRequest(id, season, episode, time.Now().UTC())
 
 	reqBody, err := json.Marshal(reqStruct)

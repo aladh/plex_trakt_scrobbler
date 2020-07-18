@@ -1,9 +1,7 @@
 package plex
 
 import (
-	"fmt"
 	"regexp"
-	"strconv"
 )
 
 type Payload struct {
@@ -26,7 +24,7 @@ type Server struct {
 
 type ID struct {
 	Provider string
-	Value    int
+	Value    string
 }
 
 var idRegex = regexp.MustCompile(`.*\.(.*)://(.*)\?`)
@@ -43,13 +41,8 @@ func (m *Metadata) Episode() int {
 	return m.Index
 }
 
-func (m *Metadata) ID() (*ID, error) {
+func (m *Metadata) ID() *ID {
 	matches := idRegex.FindStringSubmatch(m.GrandparentGUID)
 
-	value, err := strconv.Atoi(matches[2])
-	if err != nil {
-		return nil, fmt.Errorf("error converting to integer: %w", err)
-	}
-
-	return &ID{Provider: matches[1], Value: value}, nil
+	return &ID{Provider: matches[1], Value: matches[2]}
 }

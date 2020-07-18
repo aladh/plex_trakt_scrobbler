@@ -48,13 +48,7 @@ func handler(cfg *config.Config, traktClient *trakt.Trakt) func(writer http.Resp
 
 		log.Printf("Received scrobble: %v\n", payload)
 
-		id, err := payload.Metadata.ID()
-		if err != nil {
-			log.Printf("Error parsing ID: %s\n", err)
-			return
-		}
-
-		err = traktClient.WatchEpisode(id.Value, payload.Metadata.Season(), payload.Metadata.Episode())
+		err = traktClient.WatchEpisode(payload.Metadata.ID().Value, payload.Metadata.Season(), payload.Metadata.Episode())
 		if err != nil {
 			log.Printf("Error watching episode: %s\n", err)
 			return
