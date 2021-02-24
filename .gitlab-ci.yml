@@ -5,7 +5,7 @@ stages:
 
 lint:
   stage: test
-  image: golangci/golangci-lint:v1.31
+  image: golangci/golangci-lint:v1.37
   script:
     - golangci-lint run -v -E golint -E gofmt -E goconst -E interfacer -E gocritic -E gocognit -E gocyclo
 
