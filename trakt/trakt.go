@@ -5,7 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"time"
@@ -88,7 +88,7 @@ func (t *Trakt) watchMedia(reqBody []byte) ([]byte, error) {
 		return nil, fmt.Errorf("received bad response code %d", res.StatusCode)
 	}
 
-	resBody, err := ioutil.ReadAll(res.Body)
+	resBody, err := io.ReadAll(res.Body)
 	if err != nil {
 		return nil, fmt.Errorf("error reading trakt response body: %w", err)
 	}
