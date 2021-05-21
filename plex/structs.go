@@ -5,7 +5,7 @@ import (
 )
 
 const ShowType = "show"
-const movieType = "movie"
+const MovieType = "movie"
 
 type Payload struct {
 	Event    string
@@ -14,49 +14,33 @@ type Payload struct {
 }
 
 type Metadata struct {
-	GrandparentGUID    string
-	GrandparentTitle   string
-	GUID               string
-	Index              int
+	IDs []struct {
+		Uri string `json:"id"`
+	} `json:"Guid"`
 	LibrarySectionType string
-	ParentIndex        int
+
+	// This isn't used but the JSON parsing doesn't work without it since it's case insensitive
+	// https://github.com/golang/go/issues/14750
+	Guid string `json:"guid"`
 }
 
 type Server struct {
 	UUID string `json:"uuid"`
 }
 
-type ID struct {
-	Provider string
-	Value    string
-}
-
-var idRegex = regexp.MustCompile(`.*://(.*)\?`)
+var idUriRegex = regexp.MustCompile(`(\w*)://(\w*)`)
 
 func (p *Payload) Type() string {
 	return p.Metadata.LibrarySectionType
 }
 
-func (m *Metadata) Title() string {
-	return m.GrandparentTitle
-}
+func (p *Payload) IDs() map[string]string {
+	ids := map[string]string{}
 
-func (m *Metadata) Season() int {
-	return m.ParentIndex
-}
-
-func (m *Metadata) Episode() int {
-	return m.Index
-}
-
-func (m *Metadata) ID() string {
-	guid := m.GrandparentGUID
-
-	if m.LibrarySectionType == movieType {
-		guid = m.GUID
+	for _, id := range p.Metadata.IDs {
+		matches := idUriRegex.FindStringSubmatch(id.Uri)
+		ids[matches[1]] = matches[2]
 	}
 
-	matches := idRegex.FindStringSubmatch(guid)
-
-	return matches[1]
+	return ids
 }

@@ -33,8 +33,8 @@ func New(clientID string, clientSecret string, accessToken string, refreshToken 
 	return &Trakt{client: client, clientID: clientID}
 }
 
-func (t *Trakt) WatchEpisode(id string, season int, episode int) error {
-	reqBody, err := json.Marshal(watchEpisodeRequest(id, season, episode, time.Now().UTC()))
+func (t *Trakt) WatchEpisode(ids map[string]string) error {
+	reqBody, err := json.Marshal(watchEpisodeRequest(ids, time.Now().UTC()))
 	if err != nil {
 		return fmt.Errorf("error marshalling trakt request: %w", err)
 	}
@@ -51,8 +51,8 @@ func (t *Trakt) WatchEpisode(id string, season int, episode int) error {
 	return nil
 }
 
-func (t *Trakt) WatchMovie(id string) error {
-	reqBody, err := json.Marshal(watchMovieRequest(id, time.Now().UTC()))
+func (t *Trakt) WatchMovie(ids map[string]string) error {
+	reqBody, err := json.Marshal(watchMovieRequest(ids, time.Now().UTC()))
 	if err != nil {
 		return fmt.Errorf("error marshalling trakt request: %w", err)
 	}
