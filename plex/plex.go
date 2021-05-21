@@ -1,13 +1,16 @@
 package plex
 
-import "log"
+import (
+	"log"
+	"strings"
+)
 
 const scrobbleEvent = "media.scrobble"
 
-func ShouldProcess(payload *Payload, serverUUID string) bool {
+func ShouldProcess(payload *Payload, allowedUUIDs string) bool {
 	// Check that the webhook is coming from the right server
-	if payload.Server.UUID != serverUUID {
-		log.Printf("Unauthorized request from server: %s\n", payload.Server.UUID)
+	if !strings.Contains(allowedUUIDs, payload.Server.UUID) {
+		log.Printf("Unauthorized request from server UUID: %s\n", payload.Server.UUID)
 		return false
 	}
 
