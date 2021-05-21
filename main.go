@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -75,12 +74,13 @@ func parsePayload(request *http.Request) (*plex.Payload, error) {
 func watchMedia(payload *plex.Payload, traktClient *trakt.Trakt) error {
 	var err error
 
-	if payload.Type() == plex.ShowType {
+	switch payload.Type() {
+	case plex.ShowType:
 		err = traktClient.WatchEpisode(payload.IDs())
-	} else if payload.Type() == plex.MovieType {
+	case plex.MovieType:
 		err = traktClient.WatchMovie(payload.IDs())
-	} else {
-		err = errors.New(fmt.Sprintf("Unrecognized media type %s", payload.Type()))
+	default:
+		err = fmt.Errorf("unrecognized media type %s", payload.Type())
 	}
 
 	if err != nil {
