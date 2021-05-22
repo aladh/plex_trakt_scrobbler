@@ -26,5 +26,5 @@ are:
 | TRAKT_CLIENT_SECRET  | The client secret of your Trakt application                      |
 | TRAKT_ACCESS_TOKEN   | The access token provided to your application via OAuth          |
 | TRAKT_REFRESH_TOKEN  | The refresh token provided to your application via OAuth         |
-| PLEX_SERVER_UUID     | The UUID of your Plex server                                     |
+| PLEX_SERVER_UUIDS    | A comma-separated list of server UUIDs to allow                  |
 | PORT                 | The port to run the server on                                    |
