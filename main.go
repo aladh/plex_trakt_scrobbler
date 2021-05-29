@@ -42,7 +42,7 @@ func handler(cfg *config.Config, traktClient *trakt.Trakt) func(writer http.Resp
 			return
 		}
 
-		if !plex.ShouldProcess(payload, cfg.PlexServerUUIDs) {
+		if !plex.ShouldProcess(payload, cfg.PlexServerUUIDs, cfg.PlexUsername) {
 			return
 		}
 

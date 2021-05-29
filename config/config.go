@@ -11,6 +11,7 @@ type Config struct {
 	TraktAccessToken  string
 	TraktRefreshToken string
 	PlexServerUUIDs   string
+	PlexUsername      string
 	Port              string
 }
 
@@ -42,6 +43,11 @@ func FromEnv() (*Config, error) {
 		return nil, err
 	}
 
+	plexUsername, err := getEnvString("PLEX_USERNAME")
+	if err != nil {
+		return nil, err
+	}
+
 	port, err := getEnvString("PORT")
 	if err != nil {
 		port = defaultPort
@@ -53,6 +59,7 @@ func FromEnv() (*Config, error) {
 		TraktAccessToken:  traktAccessToken,
 		TraktRefreshToken: traktRefreshToken,
 		PlexServerUUIDs:   plexServerUUIDs,
+		PlexUsername:      plexUsername,
 		Port:              port,
 	}, nil
 }

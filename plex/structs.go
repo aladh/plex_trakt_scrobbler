@@ -8,6 +8,7 @@ const ShowType = "show"
 const MovieType = "movie"
 
 type Payload struct {
+	Account  Account
 	Event    string
 	Metadata Metadata
 	Server   Server
@@ -26,6 +27,10 @@ type Metadata struct {
 
 type Server struct {
 	UUID string `json:"uuid"`
+}
+
+type Account struct {
+	Title string `json:"title"`
 }
 
 var idURIRegex = regexp.MustCompile(`(\w*)://(\w*)`)
