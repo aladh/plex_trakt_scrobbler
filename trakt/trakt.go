@@ -18,7 +18,7 @@ type Trakt struct {
 	clientID string
 }
 
-func New(clientID string, clientSecret string, accessToken string, refreshToken string) *Trakt {
+func New(clientID string, clientSecret string, refreshToken string) *Trakt {
 	cfg := &oauth2.Config{
 		ClientID:     clientID,
 		ClientSecret: clientSecret,
