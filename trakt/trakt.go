@@ -28,7 +28,7 @@ func New(clientID string, clientSecret string, accessToken string, refreshToken 
 	}
 
 	ctx := context.WithValue(context.Background(), oauth2.HTTPClient, &http.Client{})
-	client := cfg.Client(ctx, &oauth2.Token{TokenType: "Bearer", AccessToken: accessToken, RefreshToken: refreshToken})
+	client := cfg.Client(ctx, &oauth2.Token{TokenType: "Bearer", RefreshToken: refreshToken, Expiry: time.Now()})
 
 	return &Trakt{client: client, clientID: clientID}
 }
