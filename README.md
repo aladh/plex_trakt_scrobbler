@@ -24,7 +24,7 @@ are:
 |----------------------|------------------------------------------------------------------|
 | TRAKT_CLIENT_ID      | The client ID of your Trakt application                          |
 | TRAKT_CLIENT_SECRET  | The client secret of your Trakt application                      |
-| TRAKT_REFRESH_TOKEN  | The refresh token provided to your application via OAuth         |
+| TRAKT_ACCESS_TOKEN   | The access token provided to your application via OAuth          |
 | PLEX_SERVER_UUIDS    | A comma-separated list of server UUIDs to allow                  |
 | PLEX_USERNAME        | The username of the plex account to scrobble for                 |
 | PORT                 | The port to run the server on                                    |

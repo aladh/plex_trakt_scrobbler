@@ -8,7 +8,7 @@ import (
 type Config struct {
 	TraktClientID     string
 	TraktClientSecret string
-	TraktRefreshToken string
+	TraktAccessToken  string
 	PlexServerUUIDs   string
 	PlexUsername      string
 	Port              string
@@ -27,7 +27,7 @@ func FromEnv() (*Config, error) {
 		return nil, err
 	}
 
-	traktRefreshToken, err := getEnvString("TRAKT_REFRESH_TOKEN")
+	traktAccessToken, err := getEnvString("TRAKT_ACCESS_TOKEN")
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +50,7 @@ func FromEnv() (*Config, error) {
 	return &Config{
 		TraktClientID:     traktClientID,
 		TraktClientSecret: traktClientSecret,
-		TraktRefreshToken: traktRefreshToken,
+		TraktAccessToken:  traktAccessToken,
 		PlexServerUUIDs:   plexServerUUIDs,
 		PlexUsername:      plexUsername,
 		Port:              port,

@@ -17,7 +17,7 @@ func main() {
 		log.Fatalf("Error getting config from env: %s", err)
 	}
 
-	traktClient := trakt.New(cfg.TraktClientID, cfg.TraktClientSecret, cfg.TraktRefreshToken)
+	traktClient := trakt.New(cfg.TraktClientID, cfg.TraktClientSecret, cfg.TraktAccessToken)
 
 	http.HandleFunc("/", handler(cfg, traktClient))
 
