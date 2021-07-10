@@ -41,7 +41,16 @@ cloud-run:
     - docker pull $SOURCE_IMAGE
     - docker tag $SOURCE_IMAGE $DESTINATION_IMAGE
     - docker push $DESTINATION_IMAGE
-    - gcloud run deploy $SERVICE_NAME --project $GCP_PROJECT_ID --platform managed --region $GCP_REGION --image $DESTINATION_IMAGE
+    - gcloud run deploy $SERVICE_NAME \
+      --project $GCP_PROJECT_ID \
+      --platform managed \
+      --region $GCP_REGION \
+      --image $DESTINATION_IMAGE \
+      --set-env-vars TRAKT_CLIENT_ID=${TRAKT_CLIENT_ID},\
+                     TRAKT_CLIENT_SECRET=${TRAKT_CLIENT_SECRET},\
+                     TRAKT_ACCESS_TOKEN=${TRAKT_ACCESS_TOKEN},\
+                     PLEX_SERVER_UUIDS=${PLEX_SERVER_UUIDS},\
+                     PLEX_USERNAME=${PLEX_USERNAME}
   after_script:
     - gcloud container images delete $DESTINATION_IMAGE --force-delete-tags
   environment:
