@@ -1,0 +1,183 @@
+{
+  "event": "media.scrobble",
+  "user": true,
+  "owner": true,
+  "Account": {
+    "id": 1,
+    "thumb": "https://plex.tv/users/cd99e55509812372/avatar?c=0738710982",
+    "title": "test-user"
+  },
+  "Server": {
+    "title": "Test suite",
+    "uuid": "test-uuid"
+  },
+  "Player": {
+    "local": true,
+    "publicAddress": "",
+    "title": "Test suite player",
+    "uuid": "test-player-uuid"
+  },
+  "Metadata": {
+    "librarySectionType": "movie",
+    "ratingKey": "6492",
+    "key": "/library/metadata/6492",
+    "guid": "plex://movie/5d77683ca091de001f2e8d47",
+    "studio": "Universal Pictures",
+    "type": "movie",
+    "title": "McHale's Navy",
+    "librarySectionTitle": "Movies",
+    "librarySectionID": 1,
+    "librarySectionKey": "/library/sections/1",
+    "contentRating": "PG",
+    "summary": "A retired Navy officer returns to active duty, along with a group of misfit sailors, to battle his former nemesis.",
+    "rating": 0.3,
+    "audienceRating": 3.8,
+    "viewCount": 1,
+    "lastViewedAt": 1627767145,
+    "year": 1997,
+    "tagline": "He's Under Siege and Out-of-Control.",
+    "thumb": "/library/metadata/6492/thumb/1627765402",
+    "art": "/library/metadata/6492/art/1627765402",
+    "duration": 6480000,
+    "originallyAvailableAt": "1997-04-18",
+    "addedAt": 1627765401,
+    "updatedAt": 1627765402,
+    "audienceRatingImage": "rottentomatoes://image.rating.spilled",
+    "primaryExtraKey": "/library/metadata/6493",
+    "ratingImage": "rottentomatoes://image.rating.rotten",
+    "Genre": [
+      {
+        "id": 24367,
+        "filter": "genre=24367",
+        "tag": "Action",
+        "count": 8
+      },
+      {
+        "id": 126,
+        "filter": "genre=126",
+        "tag": "Comedy",
+        "count": 7
+      }
+    ],
+    "Director": [
+      {
+        "id": 27134,
+        "filter": "director=27134",
+        "tag": "Bryan Spicer"
+      }
+    ],
+    "Writer": [
+      {
+        "id": 27135,
+        "filter": "writer=27135",
+        "tag": "Peter Crabbe"
+      },
+      {
+        "id": 27136,
+        "filter": "writer=27136",
+        "tag": "Andy Rose"
+      }
+    ],
+    "Producer": [
+      {
+        "id": 27137,
+        "filter": "producer=27137",
+        "tag": "Bill Sheinberg"
+      },
+      {
+        "id": 27138,
+        "filter": "producer=27138",
+        "tag": "Jonathan Sheinberg"
+      },
+      {
+        "id": 27139,
+        "filter": "producer=27139",
+        "tag": "Sid Sheinberg"
+      }
+    ],
+    "Country": [
+      {
+        "id": 20127,
+        "filter": "country=20127",
+        "tag": "United States of America",
+        "count": 15
+      }
+    ],
+    "Guid": [
+      {
+        "id": "imdb://tt0119640"
+      },
+      {
+        "id": "tmdb://14908"
+      },
+      {
+        "id": "tvdb://26947"
+      }
+    ],
+    "Role": [
+      {
+        "id": 27125,
+        "filter": "actor=27125",
+        "tag": "Tom Arnold",
+        "role": "Lt. Cmdr. Quinton McHale",
+        "thumb": "https://metadata-static.plex.tv/people/5d7768282ec6b5001f6ba5d8.jpg"
+      },
+      {
+        "id": 27126,
+        "filter": "actor=27126",
+        "tag": "Dean Stockwell",
+        "role": "Capt. Wallace B. Binghampton",
+        "thumb": "https://metadata-static.plex.tv/people/5d776825eb5d26001f1dd1bb.jpg"
+      },
+      {
+        "id": 27127,
+        "filter": "actor=27127",
+        "tag": "Debra Messing",
+        "role": "Lt. Penelope Carpenter",
+        "thumb": "https://metadata-static.plex.tv/e/people/ec6cd8659adaea45512aebcc2eade303.jpg"
+      },
+      {
+        "id": 27128,
+        "filter": "actor=27128",
+        "tag": "David Alan Grier",
+        "role": "Ensign Charles Parker",
+        "thumb": "https://metadata-static.plex.tv/0/people/02ebd1b6da31758523cc9d7e5462e350.jpg"
+      },
+      {
+        "id": 27129,
+        "filter": "actor=27129",
+        "tag": "Bruce Campbell",
+        "role": "Virgil",
+        "thumb": "https://metadata-static.plex.tv/f/people/f77bc69d80263fb1db133f08c19c3e39.jpg"
+      },
+      {
+        "id": 27130,
+        "filter": "actor=27130",
+        "tag": "French Stewart",
+        "role": "Happy",
+        "thumb": "https://metadata-static.plex.tv/0/people/0ed7d71e9312302206613f3ec2cf8b69.jpg"
+      },
+      {
+        "id": 27131,
+        "filter": "actor=27131",
+        "tag": "Tim Curry",
+        "role": "Maj. Vladikov",
+        "thumb": "https://metadata-static.plex.tv/f/people/ff99c299422e70b68d47522fcc23ae37.jpg"
+      },
+      {
+        "id": 27132,
+        "filter": "actor=27132",
+        "tag": "Ernest Borgnine",
+        "role": "Admiral Quinton McHale Sr.",
+        "thumb": "https://metadata-static.plex.tv/1/people/1068839743a285b3d4c5b77ce9d8f634.jpg"
+      },
+      {
+        "id": 27133,
+        "filter": "actor=27133",
+        "tag": "James Hong",
+        "role": "Asian Leader",
+        "thumb": "https://metadata-static.plex.tv/people/5d7768245af944001f1f635e.jpg"
+      }
+    ]
+  }
+}
