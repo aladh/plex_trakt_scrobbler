@@ -7,7 +7,7 @@ type WatchEpisodeRequest struct {
 }
 
 type Episode struct {
-	Ids       map[string]string `json:"ids"`
+	IDs       map[string]string `json:"ids"`
 	WatchedAt string            `json:"watched_at"`
 }
 
@@ -16,7 +16,7 @@ type WatchMovieRequest struct {
 }
 
 type Movie struct {
-	Ids       map[string]string `json:"ids"`
+	IDs       map[string]string `json:"ids"`
 	WatchedAt string            `json:"watched_at"`
 }
 
@@ -31,22 +31,22 @@ type RemoveHistoryRequest struct {
 	IDs []int `json:"ids"`
 }
 
-func watchEpisodeRequest(ids map[string]string, watchedAt time.Time) *WatchEpisodeRequest {
-	return &WatchEpisodeRequest{
+func watchEpisodeRequest(ids map[string]string, watchedAt time.Time) WatchEpisodeRequest {
+	return WatchEpisodeRequest{
 		Episodes: []Episode{
 			{
-				Ids:       ids,
+				IDs:       ids,
 				WatchedAt: watchedAt.Format(time.RFC3339),
 			},
 		},
 	}
 }
 
-func watchMovieRequest(ids map[string]string, watchedAt time.Time) *WatchMovieRequest {
-	return &WatchMovieRequest{
+func watchMovieRequest(ids map[string]string, watchedAt time.Time) WatchMovieRequest {
+	return WatchMovieRequest{
 		Movies: []Movie{
 			{
-				Ids:       ids,
+				IDs:       ids,
 				WatchedAt: watchedAt.Format(time.RFC3339),
 			},
 		},

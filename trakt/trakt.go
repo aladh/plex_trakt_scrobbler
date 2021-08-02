@@ -70,20 +70,11 @@ func (t *Trakt) WatchMovie(ids map[string]string) error {
 }
 
 func (t *Trakt) LatestWatchedMovie() (WatchedMovie, error) {
-	req, err := http.NewRequest("GET", "https://api.trakt.tv/sync/history/movies?limit=1", nil)
-	if err != nil {
-		return WatchedMovie{}, fmt.Errorf("error creating trakt request: %w", err)
-	}
-
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("trakt-api-version", "2")
-	req.Header.Set("trakt-api-key", t.clientID)
-
 	log.Println("Getting latest watched movie")
 
-	res, err := t.client.Do(req)
+	res, err := t.request("GET", "https://api.trakt.tv/sync/history/movies?limit=1", nil)
 	if err != nil {
-		return WatchedMovie{}, fmt.Errorf("error sending request to trakt: %w", err)
+		return WatchedMovie{}, fmt.Errorf("error making LatestWatchedMovie request: %w", err)
 	}
 
 	if res.StatusCode != 200 {
@@ -113,20 +104,11 @@ func (t *Trakt) RemoveFromHistory(id int) error {
 		return fmt.Errorf("error marshalling trakt request: %w", err)
 	}
 
-	req, err := http.NewRequest("POST", "https://api.trakt.tv/sync/history/remove", bytes.NewReader(reqBody))
-	if err != nil {
-		return fmt.Errorf("error creating trakt request: %w", err)
-	}
-
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("trakt-api-version", "2")
-	req.Header.Set("trakt-api-key", t.clientID)
-
 	log.Printf("Removing items from history: %s\n", string(reqBody))
 
-	res, err := t.client.Do(req)
+	res, err := t.request("POST", "https://api.trakt.tv/sync/history/remove", bytes.NewReader(reqBody))
 	if err != nil {
-		return fmt.Errorf("error sending request to trakt: %w", err)
+		return fmt.Errorf("error making RemoveFromHistory request: %w", err)
 	}
 
 	if res.StatusCode != 200 {
@@ -137,7 +119,25 @@ func (t *Trakt) RemoveFromHistory(id int) error {
 }
 
 func (t *Trakt) watchMedia(reqBody []byte) ([]byte, error) {
-	req, err := http.NewRequest("POST", "https://api.trakt.tv/sync/history", bytes.NewReader(reqBody))
+	res, err := t.request("POST", "https://api.trakt.tv/sync/history", bytes.NewReader(reqBody))
+	if err != nil {
+		return nil, fmt.Errorf("error making watchMedia request: %w", err)
+	}
+
+	if res.StatusCode != 201 {
+		return nil, fmt.Errorf("received bad response code %d", res.StatusCode)
+	}
+
+	resBody, err := io.ReadAll(res.Body)
+	if err != nil {
+		return nil, fmt.Errorf("error reading trakt response body: %w", err)
+	}
+
+	return resBody, nil
+}
+
+func (t *Trakt) request(method string, url string, body io.Reader) (*http.Response, error) {
+	req, err := http.NewRequest(method, url, body)
 	if err != nil {
 		return nil, fmt.Errorf("error creating trakt request: %w", err)
 	}
@@ -151,14 +151,5 @@ func (t *Trakt) watchMedia(reqBody []byte) ([]byte, error) {
 		return nil, fmt.Errorf("error sending request to trakt: %w", err)
 	}
 
-	if res.StatusCode != 201 {
-		return nil, fmt.Errorf("received bad response code %d", res.StatusCode)
-	}
-
-	resBody, err := io.ReadAll(res.Body)
-	if err != nil {
-		return nil, fmt.Errorf("error reading trakt response body: %w", err)
-	}
-
-	return resBody, nil
+	return res, nil
 }
