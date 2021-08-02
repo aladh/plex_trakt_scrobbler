@@ -14,7 +14,7 @@ type Config struct {
 	Port              string
 }
 
-const defaultPort = "8080"
+const DefaultPort = "8080"
 
 func FromEnv() (*Config, error) {
 	traktClientID, err := getEnvString("TRAKT_CLIENT_ID")
@@ -44,7 +44,7 @@ func FromEnv() (*Config, error) {
 
 	port, err := getEnvString("PORT")
 	if err != nil {
-		port = defaultPort
+		port = DefaultPort
 	}
 
 	return &Config{

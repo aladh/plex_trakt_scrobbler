@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"mime/multipart"
 	"net/http"
 	"os"
@@ -75,7 +76,7 @@ func sendRequest(t *testing.T) {
 		t.Fatalf("error closing form writer: %s", err)
 	}
 
-	response, err := http.Post("http://localhost:3000", multipartWriter.FormDataContentType(), &formBuffer)
+	response, err := http.Post(fmt.Sprintf("http://localhost:%s", config.DefaultPort), multipartWriter.FormDataContentType(), &formBuffer)
 	if err != nil {
 		t.Fatalf("error making request to app server: %s", err)
 	}
