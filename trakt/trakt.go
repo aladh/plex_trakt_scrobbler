@@ -18,6 +18,11 @@ type Trakt struct {
 	clientID string
 }
 
+type response struct {
+	Body       []byte
+	StatusCode int
+}
+
 func New(clientID string, clientSecret string, accessToken string) *Trakt {
 	cfg := &oauth2.Config{
 		ClientID:     clientID,
@@ -81,16 +86,11 @@ func (t *Trakt) LatestWatchedMovie() (WatchedMovie, error) {
 		return WatchedMovie{}, fmt.Errorf("received bad response code %d", res.StatusCode)
 	}
 
-	resBody, err := io.ReadAll(res.Body)
-	if err != nil {
-		return WatchedMovie{}, fmt.Errorf("error reading trakt response body: %w", err)
-	}
-
-	log.Printf("Got response: %s\n", string(resBody))
+	log.Printf("Got response: %s\n", string(res.Body))
 
 	var watchedMovies []WatchedMovie
 
-	err = json.Unmarshal(resBody, &watchedMovies)
+	err = json.Unmarshal(res.Body, &watchedMovies)
 	if err != nil {
 		return WatchedMovie{}, fmt.Errorf("error parsing JSON response: %w", err)
 	}
@@ -128,18 +128,13 @@ func (t *Trakt) watchMedia(reqBody []byte) ([]byte, error) {
 		return nil, fmt.Errorf("received bad response code %d", res.StatusCode)
 	}
 
-	resBody, err := io.ReadAll(res.Body)
-	if err != nil {
-		return nil, fmt.Errorf("error reading trakt response body: %w", err)
-	}
-
-	return resBody, nil
+	return res.Body, nil
 }
 
-func (t *Trakt) request(method string, url string, body io.Reader) (*http.Response, error) {
+func (t *Trakt) request(method string, url string, body io.Reader) (response, error) {
 	req, err := http.NewRequest(method, url, body)
 	if err != nil {
-		return nil, fmt.Errorf("error creating trakt request: %w", err)
+		return response{}, fmt.Errorf("error creating trakt request: %w", err)
 	}
 
 	req.Header.Set("Content-Type", "application/json")
@@ -148,8 +143,13 @@ func (t *Trakt) request(method string, url string, body io.Reader) (*http.Respon
 
 	res, err := t.client.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("error sending request to trakt: %w", err)
+		return response{}, fmt.Errorf("error sending request to trakt: %w", err)
 	}
 
-	return res, nil
+	resBody, err := io.ReadAll(res.Body)
+	if err != nil {
+		return response{}, fmt.Errorf("error reading trakt response body: %w", err)
+	}
+
+	return response{Body: resBody, StatusCode: res.StatusCode}, nil
 }
