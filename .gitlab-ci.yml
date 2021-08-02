@@ -8,6 +8,18 @@ lint:
   image: golangci/golangci-lint:v1.41.1
   script:
     - golangci-lint run -v -E gofmt -E goconst -E gocritic -E gocognit -E gocyclo
+  except:
+    - schedules
+
+end-to-end:
+  stage: test
+  image: golang:latest
+  variables:
+    ENABLE_E2E_TESTS: 1
+  script:
+    - go test -v main_test.go
+  only:
+    - master
 
 container-image:
   stage: build
@@ -23,6 +35,8 @@ container-image:
     - docker push $CI_REGISTRY_IMAGE
   only:
     - master
+  except:
+    - schedules
 
 cloud-run:
   stage: deploy
@@ -53,3 +67,5 @@ cloud-run:
     name: production
   only:
     - master
+  except:
+    - schedules
