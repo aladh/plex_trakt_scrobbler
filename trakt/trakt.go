@@ -46,12 +46,16 @@ func (t *Trakt) WatchEpisode(ids map[string]string) error {
 
 	log.Printf("Sending watched episode: %s\n", string(reqBody))
 
-	resBody, err := t.watchMedia(reqBody)
+	res, err := t.request("POST", "https://api.trakt.tv/sync/history", bytes.NewReader(reqBody))
 	if err != nil {
-		return err
+		return fmt.Errorf("error making WatchEpisode request: %w", err)
 	}
 
-	log.Printf("Got response: %s\n", string(resBody))
+	if res.StatusCode != 201 {
+		return fmt.Errorf("received bad response code %d", res.StatusCode)
+	}
+
+	log.Printf("Got response: %s\n", string(res.Body))
 
 	return nil
 }
@@ -64,12 +68,16 @@ func (t *Trakt) WatchMovie(ids map[string]string) error {
 
 	log.Printf("Sending watched movie: %s\n", string(reqBody))
 
-	resBody, err := t.watchMedia(reqBody)
+	res, err := t.request("POST", "https://api.trakt.tv/sync/history", bytes.NewReader(reqBody))
 	if err != nil {
-		return err
+		return fmt.Errorf("error making WatchMovie request: %w", err)
 	}
 
-	log.Printf("Got response: %s\n", string(resBody))
+	if res.StatusCode != 201 {
+		return fmt.Errorf("received bad response code %d", res.StatusCode)
+	}
+
+	log.Printf("Got response: %s\n", string(res.Body))
 
 	return nil
 }
@@ -116,19 +124,6 @@ func (t *Trakt) RemoveFromHistory(id int) error {
 	}
 
 	return nil
-}
-
-func (t *Trakt) watchMedia(reqBody []byte) ([]byte, error) {
-	res, err := t.request("POST", "https://api.trakt.tv/sync/history", bytes.NewReader(reqBody))
-	if err != nil {
-		return nil, fmt.Errorf("error making watchMedia request: %w", err)
-	}
-
-	if res.StatusCode != 201 {
-		return nil, fmt.Errorf("received bad response code %d", res.StatusCode)
-	}
-
-	return res.Body, nil
 }
 
 func (t *Trakt) request(method string, url string, body io.Reader) (response, error) {
