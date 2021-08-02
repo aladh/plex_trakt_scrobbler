@@ -17,6 +17,10 @@ func TestWatchMovieWebhook(t *testing.T) {
 	// Start server
 	go main()
 
+	sendRequest(t)
+}
+
+func sendRequest(t *testing.T) {
 	payload, err := os.ReadFile("testdata/webhook.json")
 	if err != nil {
 		t.Fatalf("error opening fixture file: %s", err)
