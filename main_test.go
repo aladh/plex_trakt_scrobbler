@@ -6,6 +6,10 @@ import (
 	"net/http"
 	"os"
 	"testing"
+	"time"
+
+	"github.com/ali-l/plex_trakt_scrobbler/config"
+	"github.com/ali-l/plex_trakt_scrobbler/trakt"
 )
 
 func TestWatchMovieWebhook(t *testing.T) {
@@ -18,6 +22,34 @@ func TestWatchMovieWebhook(t *testing.T) {
 	go main()
 
 	sendRequest(t)
+
+	cleanup(t)
+}
+
+func cleanup(t *testing.T) {
+	cfg, err := config.FromEnv()
+	if err != nil {
+		t.Fatalf("error loading config from env: %s", err)
+	}
+
+	traktClient := trakt.New(cfg.TraktClientID, cfg.TraktClientSecret, cfg.TraktAccessToken)
+	watchedMovie, err := traktClient.LatestWatchedMovie()
+	if err != nil {
+		t.Fatalf("error getting latest watchedMovie: %s", err)
+	}
+
+	expectedTitle := "McHale's Navy"
+	if watchedMovie.Movie.Title != expectedTitle {
+		t.Fatalf("title = %s, want %s", watchedMovie.Movie.Title, expectedTitle)
+	}
+
+	// Comply with rate limiting
+	time.Sleep(1 * time.Second)
+
+	err = traktClient.RemoveFromHistory(watchedMovie.ID)
+	if err != nil {
+		t.Fatalf("error removing from history: %s", err)
+	}
 }
 
 func sendRequest(t *testing.T) {

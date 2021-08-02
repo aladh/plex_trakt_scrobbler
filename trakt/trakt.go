@@ -69,6 +69,73 @@ func (t *Trakt) WatchMovie(ids map[string]string) error {
 	return nil
 }
 
+func (t *Trakt) LatestWatchedMovie() (WatchedMovie, error) {
+	req, err := http.NewRequest("GET", "https://api.trakt.tv/sync/history/movies?limit=1", nil)
+	if err != nil {
+		return WatchedMovie{}, fmt.Errorf("error creating trakt request: %w", err)
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("trakt-api-version", "2")
+	req.Header.Set("trakt-api-key", t.clientID)
+
+	log.Println("Getting latest watched movie")
+
+	res, err := t.client.Do(req)
+	if err != nil {
+		return WatchedMovie{}, fmt.Errorf("error sending request to trakt: %w", err)
+	}
+
+	if res.StatusCode != 200 {
+		return WatchedMovie{}, fmt.Errorf("received bad response code %d", res.StatusCode)
+	}
+
+	resBody, err := io.ReadAll(res.Body)
+	if err != nil {
+		return WatchedMovie{}, fmt.Errorf("error reading trakt response body: %w", err)
+	}
+
+	log.Printf("Got response: %s\n", string(resBody))
+
+	var watchedMovies []WatchedMovie
+
+	err = json.Unmarshal(resBody, &watchedMovies)
+	if err != nil {
+		return WatchedMovie{}, fmt.Errorf("error parsing JSON response: %w", err)
+	}
+
+	return watchedMovies[0], nil
+}
+
+func (t *Trakt) RemoveFromHistory(id int) error {
+	reqBody, err := json.Marshal(removeHistoryRequest(id))
+	if err != nil {
+		return fmt.Errorf("error marshalling trakt request: %w", err)
+	}
+
+	req, err := http.NewRequest("POST", "https://api.trakt.tv/sync/history/remove", bytes.NewReader(reqBody))
+	if err != nil {
+		return fmt.Errorf("error creating trakt request: %w", err)
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("trakt-api-version", "2")
+	req.Header.Set("trakt-api-key", t.clientID)
+
+	log.Printf("Removing items from history: %s\n", string(reqBody))
+
+	res, err := t.client.Do(req)
+	if err != nil {
+		return fmt.Errorf("error sending request to trakt: %w", err)
+	}
+
+	if res.StatusCode != 200 {
+		return fmt.Errorf("received bad response code %d", res.StatusCode)
+	}
+
+	return nil
+}
+
 func (t *Trakt) watchMedia(reqBody []byte) ([]byte, error) {
 	req, err := http.NewRequest("POST", "https://api.trakt.tv/sync/history", bytes.NewReader(reqBody))
 	if err != nil {
