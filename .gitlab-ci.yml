@@ -16,6 +16,8 @@ end-to-end:
   image: golang:latest
   variables:
     ENABLE_E2E_TESTS: 1
+    PLEX_SERVER_UUIDS: test-uuid
+    PLEX_USERNAME: test-user
   script:
     - go test -v .
   only:
