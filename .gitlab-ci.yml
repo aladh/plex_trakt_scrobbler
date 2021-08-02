@@ -17,7 +17,7 @@ end-to-end:
   variables:
     ENABLE_E2E_TESTS: 1
   script:
-    - go test -v main_test.go
+    - go test -v .
   only:
     - master
 
