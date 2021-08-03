@@ -1,4 +1,4 @@
-module github.com/ali-l/plex_trakt_scrobbler
+module github.com/aladh/plex_trakt_scrobbler
 
 go 1.16
 

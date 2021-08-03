@@ -5,8 +5,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/ali-l/plex_trakt_scrobbler/config"
-	"github.com/ali-l/plex_trakt_scrobbler/server"
+	"github.com/aladh/plex_trakt_scrobbler/config"
+	"github.com/aladh/plex_trakt_scrobbler/server"
 )
 
 func main() {

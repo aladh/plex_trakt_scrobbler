@@ -6,9 +6,9 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/ali-l/plex_trakt_scrobbler/config"
-	"github.com/ali-l/plex_trakt_scrobbler/plex"
-	"github.com/ali-l/plex_trakt_scrobbler/trakt"
+	"github.com/aladh/plex_trakt_scrobbler/config"
+	"github.com/aladh/plex_trakt_scrobbler/plex"
+	"github.com/aladh/plex_trakt_scrobbler/trakt"
 )
 
 func Handler(cfg *config.Config) func(writer http.ResponseWriter, request *http.Request) {

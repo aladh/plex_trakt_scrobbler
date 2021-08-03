@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ali-l/plex_trakt_scrobbler/config"
-	"github.com/ali-l/plex_trakt_scrobbler/trakt"
+	"github.com/aladh/plex_trakt_scrobbler/config"
+	"github.com/aladh/plex_trakt_scrobbler/trakt"
 )
 
 func TestWatchMovieWebhook(t *testing.T) {
