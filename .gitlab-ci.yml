@@ -70,7 +70,11 @@ cloud-run:
       --platform managed
       --region $GCP_REGION
       --image $DESTINATION_IMAGE
-      --set-env-vars TRAKT_CLIENT_ID=${TRAKT_CLIENT_ID},TRAKT_ACCESS_TOKEN=${TRAKT_ACCESS_TOKEN},PLEX_SERVER_UUIDS=${PLEX_SERVER_UUIDS},PLEX_USERNAME=${PLEX_USERNAME},WEBHOOK_URL=${WEBHOOK_URL}
+      --set-env-vars TRAKT_CLIENT_ID=${TRAKT_CLIENT_ID}
+      --set-env-vars TRAKT_ACCESS_TOKEN=${TRAKT_ACCESS_TOKEN}
+      --set-env-vars PLEX_SERVER_UUIDS=${PLEX_SERVER_UUIDS}
+      --set-env-vars PLEX_USERNAME=${PLEX_USERNAME}
+      --set-env-vars WEBHOOK_URL=${WEBHOOK_URL}
   after_script:
     - gcloud container images delete $DESTINATION_IMAGE --force-delete-tags
   environment:
