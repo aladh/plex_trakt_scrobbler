@@ -6,24 +6,18 @@ import (
 )
 
 type Config struct {
-	TraktClientID     string
-	TraktClientSecret string
-	TraktAccessToken  string
-	PlexServerUUIDs   string
-	PlexUsername      string
-	Port              string
-	WebhookURL        string
+	TraktClientID    string
+	TraktAccessToken string
+	PlexServerUUIDs  string
+	PlexUsername     string
+	Port             string
+	WebhookURL       string
 }
 
 const DefaultPort = "8080"
 
 func FromEnv() (*Config, error) {
 	traktClientID, err := getEnvString("TRAKT_CLIENT_ID")
-	if err != nil {
-		return nil, err
-	}
-
-	traktClientSecret, err := getEnvString("TRAKT_CLIENT_SECRET")
 	if err != nil {
 		return nil, err
 	}
@@ -54,13 +48,12 @@ func FromEnv() (*Config, error) {
 	}
 
 	return &Config{
-		TraktClientID:     traktClientID,
-		TraktClientSecret: traktClientSecret,
-		TraktAccessToken:  traktAccessToken,
-		PlexServerUUIDs:   plexServerUUIDs,
-		PlexUsername:      plexUsername,
-		Port:              port,
-		WebhookURL:        webhookURL,
+		TraktClientID:    traktClientID,
+		TraktAccessToken: traktAccessToken,
+		PlexServerUUIDs:  plexServerUUIDs,
+		PlexUsername:     plexUsername,
+		Port:             port,
+		WebhookURL:       webhookURL,
 	}, nil
 }
 

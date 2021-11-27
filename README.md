@@ -23,8 +23,8 @@ are:
 | Environment variable | Description                                                      |
 |----------------------|------------------------------------------------------------------|
 | TRAKT_CLIENT_ID      | The client ID of your Trakt application                          |
-| TRAKT_CLIENT_SECRET  | The client secret of your Trakt application                      |
 | TRAKT_ACCESS_TOKEN   | The access token provided to your application via OAuth          |
 | PLEX_SERVER_UUIDS    | A pipe-separated list of server UUIDs to allow                  |
 | PLEX_USERNAME        | The username of the plex account to scrobble for                 |
 | PORT                 | The port to run the server on                                    |
+| WEBHOOK_URL          | URL to send error notifications to                                    |

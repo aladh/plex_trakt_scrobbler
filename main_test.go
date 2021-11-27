@@ -33,7 +33,7 @@ func cleanup(t *testing.T) {
 		t.Fatalf("error loading config from env: %s", err)
 	}
 
-	traktClient := trakt.New(cfg.TraktClientID, cfg.TraktClientSecret, cfg.TraktAccessToken)
+	traktClient := trakt.New(cfg.TraktClientID, cfg.TraktAccessToken)
 	watchedMovie, err := traktClient.LatestWatchedMovie()
 	if err != nil {
 		t.Fatalf("error getting latest watchedMovie: %s", err)

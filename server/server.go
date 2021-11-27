@@ -15,7 +15,7 @@ import (
 const postMethod = "POST"
 
 func Handler(cfg *config.Config) func(http.ResponseWriter, *http.Request) {
-	traktClient := trakt.New(cfg.TraktClientID, cfg.TraktClientSecret, cfg.TraktAccessToken)
+	traktClient := trakt.New(cfg.TraktClientID, cfg.TraktAccessToken)
 
 	return func(_ http.ResponseWriter, request *http.Request) {
 		err := processRequest(cfg, traktClient, request)

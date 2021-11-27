@@ -2,20 +2,18 @@ package trakt
 
 import (
 	"bytes"
-	"context"
 	"encoding/json"
 	"fmt"
 	"io"
 	"log"
 	"net/http"
 	"time"
-
-	"golang.org/x/oauth2"
 )
 
 type Trakt struct {
-	client   *http.Client
-	clientID string
+	clientID    string
+	accessToken string
+	client      http.Client
 }
 
 type response struct {
@@ -23,19 +21,8 @@ type response struct {
 	StatusCode int
 }
 
-func New(clientID string, clientSecret string, accessToken string) *Trakt {
-	cfg := &oauth2.Config{
-		ClientID:     clientID,
-		ClientSecret: clientSecret,
-		Endpoint: oauth2.Endpoint{
-			TokenURL: "https://api.trakt.tv/oauth/token",
-		},
-	}
-
-	ctx := context.WithValue(context.Background(), oauth2.HTTPClient, &http.Client{})
-	client := cfg.Client(ctx, &oauth2.Token{TokenType: "Bearer", AccessToken: accessToken})
-
-	return &Trakt{client: client, clientID: clientID}
+func New(clientID string, accessToken string) *Trakt {
+	return &Trakt{clientID: clientID, accessToken: accessToken, client: http.Client{}}
 }
 
 func (t *Trakt) WatchEpisode(ids map[string]string) error {
@@ -135,6 +122,7 @@ func (t *Trakt) request(method string, url string, body io.Reader) (response, er
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("trakt-api-version", "2")
 	req.Header.Set("trakt-api-key", t.clientID)
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", t.accessToken))
 
 	res, err := t.client.Do(req)
 	if err != nil {
