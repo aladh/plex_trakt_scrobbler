@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 )
 
 type payload struct {
@@ -14,6 +15,7 @@ type payload struct {
 type embed struct {
 	Title       string `json:"title"`
 	Description string `json:"description"`
+	Timestamp   string `json:"timestamp"`
 }
 
 const contentType = "application/json"
@@ -24,6 +26,7 @@ func Track(webhookURL string, err error) error {
 			{
 				Title:       "Plex Trakt Scrobbler",
 				Description: err.Error(),
+				Timestamp:   time.Now().UTC().Format(time.RFC3339),
 			},
 		},
 	})
