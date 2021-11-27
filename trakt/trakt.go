@@ -7,6 +7,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -44,6 +45,10 @@ func (t *Trakt) WatchEpisode(ids map[string]string) error {
 
 	log.Printf("Got response: %s\n", string(res.Body))
 
+	if strings.Contains(string(res.Body), "ids") {
+		return fmt.Errorf("show not found")
+	}
+
 	return nil
 }
 
@@ -65,6 +70,10 @@ func (t *Trakt) WatchMovie(ids map[string]string) error {
 	}
 
 	log.Printf("Got response: %s\n", string(res.Body))
+
+	if strings.Contains(string(res.Body), "ids") {
+		return fmt.Errorf("movie not found")
+	}
 
 	return nil
 }
