@@ -48,6 +48,10 @@ func processRequest(cfg *config.Config, traktClient *trakt.Trakt, request *http.
 
 	log.Printf("Received scrobble: %v\n", payload)
 
+	if !payload.HasIDs() {
+		return fmt.Errorf("error processing request: payload has no IDs")
+	}
+
 	err = watchMedia(payload, traktClient)
 	if err != nil {
 		return fmt.Errorf("error watching media: %w", err)

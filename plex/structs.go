@@ -49,3 +49,7 @@ func (p *Payload) IDs() map[string]string {
 
 	return ids
 }
+
+func (p *Payload) HasIDs() bool {
+	return len(p.Metadata.IDs) > 0
+}
