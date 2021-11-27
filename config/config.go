@@ -12,6 +12,7 @@ type Config struct {
 	PlexServerUUIDs   string
 	PlexUsername      string
 	Port              string
+	WebhookURL        string
 }
 
 const DefaultPort = "8080"
@@ -47,6 +48,11 @@ func FromEnv() (*Config, error) {
 		port = DefaultPort
 	}
 
+	webhookURL, err := getEnvString("WEBHOOK_URL")
+	if err != nil {
+		return nil, err
+	}
+
 	return &Config{
 		TraktClientID:     traktClientID,
 		TraktClientSecret: traktClientSecret,
@@ -54,6 +60,7 @@ func FromEnv() (*Config, error) {
 		PlexServerUUIDs:   plexServerUUIDs,
 		PlexUsername:      plexUsername,
 		Port:              port,
+		WebhookURL:        webhookURL,
 	}, nil
 }
 

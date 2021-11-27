@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/aladh/plex_trakt_scrobbler/config"
+	"github.com/aladh/plex_trakt_scrobbler/errors"
 	"github.com/aladh/plex_trakt_scrobbler/plex"
 	"github.com/aladh/plex_trakt_scrobbler/trakt"
 )
@@ -36,7 +37,14 @@ func Handler(cfg *config.Config) func(writer http.ResponseWriter, request *http.
 
 		err = watchMedia(payload, traktClient)
 		if err != nil {
-			log.Printf("Error watching media: %s\n", err)
+			err = fmt.Errorf("error watching media: %w", err)
+			log.Println(err)
+			log.Printf("Request payload: %s\n", request.FormValue("payload"))
+
+			err = errors.Track(cfg.WebhookURL, err)
+			if err != nil {
+				log.Printf("error tracking error: %s\n", err)
+			}
 		}
 	}
 }
