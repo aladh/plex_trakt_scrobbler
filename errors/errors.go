@@ -30,6 +30,9 @@ func Track(webhookURL string, err error) error {
 			},
 		},
 	})
+	if err != nil {
+		return fmt.Errorf("error marshalling webhook: %w", err)
+	}
 
 	resp, err := http.Post(webhookURL, contentType, bytes.NewReader(body))
 	if err != nil {
