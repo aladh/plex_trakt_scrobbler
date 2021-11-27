@@ -11,12 +11,14 @@ import (
 	"github.com/aladh/plex_trakt_scrobbler/trakt"
 )
 
+const postMethod = "POST"
+
 func Handler(cfg *config.Config) func(writer http.ResponseWriter, request *http.Request) {
 	traktClient := trakt.New(cfg.TraktClientID, cfg.TraktClientSecret, cfg.TraktAccessToken)
 
 	return func(writer http.ResponseWriter, request *http.Request) {
 		// Plex webhooks are always POST
-		if request.Method != "POST" {
+		if request.Method != postMethod {
 			return
 		}
 
