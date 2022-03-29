@@ -1,3 +1,3 @@
 module github.com/aladh/plex_trakt_scrobbler
 
-go 1.17
+go 1.18
