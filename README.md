@@ -20,11 +20,11 @@ and runs a server that scrobbles movies and TV shows you watch to Trakt.
 A Docker image can be built using the provided Dockerfile. The environment variables required to run the application
 are:
 
-| Environment variable | Description                                                      |
-|----------------------|------------------------------------------------------------------|
-| TRAKT_CLIENT_ID      | The client ID of your Trakt application                          |
-| TRAKT_ACCESS_TOKEN   | The access token provided to your application via OAuth          |
-| PLEX_SERVER_UUIDS    | A pipe-separated list of server UUIDs to allow                  |
-| PLEX_USERNAME        | The username of the plex account to scrobble for                 |
-| PORT                 | The port to run the server on                                    |
-| WEBHOOK_URL          | URL to send error notifications to                                    |
+| Environment variable | Description                                             |
+|----------------------|---------------------------------------------------------|
+| TRAKT_CLIENT_ID      | The client ID of your Trakt application                 |
+| TRAKT_ACCESS_TOKEN   | The access token provided to your application via OAuth |
+| PLEX_SERVER_UUIDS    | A pipe-separated list of server UUIDs to allow          |
+| PLEX_USERNAME        | The username of the plex account to scrobble for        |
+| PORT                 | The port to listen on (defaults to 8080)                |
+| WEBHOOK_URL          | URL to send error notifications to                      |
