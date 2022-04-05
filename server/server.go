@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/aladh/plex_trakt_scrobbler/config"
 	"github.com/aladh/plex_trakt_scrobbler/errors"
@@ -42,7 +43,12 @@ func processRequest(cfg *config.Config, traktClient *trakt.Trakt, request *http.
 		return fmt.Errorf("error parsing webhook payload: %w", err)
 	}
 
-	if !plex.ShouldProcess(payload, cfg.PlexServerUUIDs, cfg.PlexUsername) {
+	if !isAuthorized(payload, cfg.PlexServerUUIDs, cfg.PlexUsername) {
+		return fmt.Errorf("error processing request: not authorized")
+	}
+
+	// Only send watch request when media has been completely watched
+	if !payload.IsScrobble() {
 		return nil
 	}
 
@@ -58,6 +64,22 @@ func processRequest(cfg *config.Config, traktClient *trakt.Trakt, request *http.
 	}
 
 	return nil
+}
+
+func isAuthorized(payload *plex.Payload, allowedUUIDs string, allowedUsername string) bool {
+	// Check that the webhook is coming from an allowed server
+	if !strings.Contains(allowedUUIDs, payload.ServerUUID()) {
+		log.Printf("Unauthorized request from server UUID: %s\n", payload.ServerUUID())
+		return false
+	}
+
+	// Only scrobble plays from the specified user
+	if payload.Username() != allowedUsername {
+		log.Printf("User not recognized: %s\n", payload.Username())
+		return false
+	}
+
+	return true
 }
 
 func parsePayload(request *http.Request) (*plex.Payload, error) {

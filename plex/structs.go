@@ -6,6 +6,7 @@ import (
 
 const ShowType = "show"
 const MovieType = "movie"
+const scrobbleEvent = "media.scrobble"
 
 type Payload struct {
 	Account  Account
@@ -52,4 +53,16 @@ func (p *Payload) IDs() map[string]string {
 
 func (p *Payload) HasIDs() bool {
 	return len(p.Metadata.IDs) > 0
+}
+
+func (p *Payload) IsScrobble() bool {
+	return p.Event == scrobbleEvent
+}
+
+func (p *Payload) Username() string {
+	return p.Account.Title
+}
+
+func (p *Payload) ServerUUID() string {
+	return p.Server.UUID
 }
