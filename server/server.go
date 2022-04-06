@@ -44,7 +44,7 @@ func processRequest(cfg *config.Config, traktClient *trakt.Trakt, request *http.
 	}
 
 	if !isAuthorized(payload, cfg.PlexServerUUIDs, cfg.PlexUsername) {
-		return fmt.Errorf("error processing request: not authorized")
+		return nil
 	}
 
 	// Only send watch request when media has been completely watched
