@@ -3,12 +3,13 @@ package config
 import (
 	"fmt"
 	"os"
+	"strings"
 )
 
 type Config struct {
 	TraktClientID    string
 	TraktAccessToken string
-	PlexServerUUIDs  string
+	PlexServerUUIDs  []string
 	PlexUsername     string
 	Port             string
 	WebhookURL       string
@@ -27,7 +28,7 @@ func FromEnv() (*Config, error) {
 		return nil, err
 	}
 
-	plexServerUUIDs, err := getEnvString("PLEX_SERVER_UUIDS")
+	plexServerUUIDs, err := getEnvSlice("PLEX_SERVER_UUIDS")
 	if err != nil {
 		return nil, err
 	}
@@ -55,6 +56,17 @@ func FromEnv() (*Config, error) {
 		Port:             port,
 		WebhookURL:       webhookURL,
 	}, nil
+}
+
+func getEnvSlice(name string) ([]string, error) {
+	const separator = "|"
+
+	value, exists := os.LookupEnv(name)
+	if !exists {
+		return nil, fmt.Errorf("environment variable %s not found", name)
+	}
+
+	return strings.Split(value, separator), nil
 }
 
 func getEnvString(name string) (string, error) {

@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"strings"
 
 	"github.com/aladh/plex_trakt_scrobbler/config"
 	"github.com/aladh/plex_trakt_scrobbler/errors"
 	"github.com/aladh/plex_trakt_scrobbler/plex"
 	"github.com/aladh/plex_trakt_scrobbler/trakt"
+	"github.com/aladh/plex_trakt_scrobbler/util"
 )
 
 const postMethod = "POST"
@@ -66,9 +66,9 @@ func processRequest(cfg *config.Config, traktClient *trakt.Trakt, request *http.
 	return nil
 }
 
-func isAuthorized(payload *plex.Payload, allowedUUIDs string, allowedUsername string) bool {
+func isAuthorized(payload *plex.Payload, allowedUUIDs []string, allowedUsername string) bool {
 	// Check that the webhook is coming from an allowed server
-	if !strings.Contains(allowedUUIDs, payload.ServerUUID()) {
+	if !util.SliceContains(allowedUUIDs, payload.ServerUUID()) {
 		log.Printf("Unauthorized request from server UUID: %s\n", payload.ServerUUID())
 		return false
 	}
