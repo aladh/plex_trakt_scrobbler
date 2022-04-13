@@ -15,9 +15,9 @@ type Config struct {
 	WebhookURL       string
 }
 
-const DefaultPort = "8080"
-
 func FromEnv() (*Config, error) {
+	const defaultPort = "8080"
+
 	traktClientID, err := getEnvString("TRAKT_CLIENT_ID")
 	if err != nil {
 		return nil, err
@@ -40,7 +40,7 @@ func FromEnv() (*Config, error) {
 
 	port, err := getEnvString("PORT")
 	if err != nil {
-		port = DefaultPort
+		port = defaultPort
 	}
 
 	webhookURL, err := getEnvString("WEBHOOK_URL")

@@ -22,17 +22,16 @@ func TestWatchMovieWebhook(t *testing.T) {
 	// Start server
 	go main()
 
-	sendRequest(t)
-
-	cleanup(t)
-}
-
-func cleanup(t *testing.T) {
 	cfg, err := config.FromEnv()
 	if err != nil {
 		t.Fatalf("error loading config from env: %s", err)
 	}
 
+	sendRequest(t, cfg)
+	cleanup(t, cfg)
+}
+
+func cleanup(t *testing.T, cfg *config.Config) {
 	traktClient := trakt.New(cfg.TraktClientID, cfg.TraktAccessToken)
 	watchedMovie, err := traktClient.LatestWatchedMovie()
 	if err != nil {
@@ -53,7 +52,7 @@ func cleanup(t *testing.T) {
 	}
 }
 
-func sendRequest(t *testing.T) {
+func sendRequest(t *testing.T, cfg *config.Config) {
 	payload, err := os.ReadFile("testdata/webhook.json")
 	if err != nil {
 		t.Fatalf("error opening fixture file: %s", err)
@@ -76,7 +75,7 @@ func sendRequest(t *testing.T) {
 		t.Fatalf("error closing form writer: %s", err)
 	}
 
-	response, err := http.Post(fmt.Sprintf("http://localhost:%s", config.DefaultPort), multipartWriter.FormDataContentType(), &formBuffer)
+	response, err := http.Post(fmt.Sprintf("http://localhost:%s", cfg.Port), multipartWriter.FormDataContentType(), &formBuffer)
 	if err != nil {
 		t.Fatalf("error making request to app server: %s", err)
 	}
