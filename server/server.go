@@ -24,7 +24,7 @@ func Handler(cfg *config.Config) func(http.ResponseWriter, *http.Request) {
 			log.Println(err)
 			log.Printf("Request payload: %s\n", request.FormValue("payload"))
 
-			err = errors.Track(cfg.WebhookURL, err)
+			err = errors.Track(cfg.ErrorWebhookURL, err)
 			if err != nil {
 				log.Printf("error tracking error: %s\n", err)
 			}

@@ -27,4 +27,4 @@ are:
 | PLEX_SERVER_UUIDS    | A pipe-separated list of server UUIDs to allow          |
 | PLEX_USERNAME        | The username of the plex account to scrobble for        |
 | PORT                 | The port to listen on (defaults to 8080)                |
-| WEBHOOK_URL          | URL to send error notifications to                      |
+| ERROR_WEBHOOK_URL    | URL to send error notifications to                      |
