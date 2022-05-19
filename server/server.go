@@ -49,10 +49,11 @@ func processRequest(cfg *config.Config, traktClient *trakt.Trakt, request *http.
 
 	// Only send watch request when media has been completely watched
 	if !payload.IsScrobble() {
+		log.Printf("Skipping non-scrobble event: %s\n", payload.Event)
 		return nil
 	}
 
-	log.Printf("Received scrobble: %v\n", payload)
+	log.Printf("Parsed payload from scrobble: %v\n", payload)
 
 	if !payload.HasIDs() {
 		return fmt.Errorf("error processing request: payload has no IDs")
