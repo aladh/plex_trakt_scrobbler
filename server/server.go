@@ -8,6 +8,7 @@ import (
 
 	"github.com/aladh/plex_trakt_scrobbler/config"
 	"github.com/aladh/plex_trakt_scrobbler/errors"
+	"github.com/aladh/plex_trakt_scrobbler/notifier"
 	"github.com/aladh/plex_trakt_scrobbler/plex"
 	"github.com/aladh/plex_trakt_scrobbler/trakt"
 	"github.com/aladh/plex_trakt_scrobbler/util"
@@ -59,7 +60,7 @@ func processRequest(cfg *config.Config, traktClient *trakt.Trakt, request *http.
 		return fmt.Errorf("error processing request: payload has no IDs")
 	}
 
-	err = watchMedia(payload, traktClient)
+	err = watchMedia(payload, traktClient, cfg)
 	if err != nil {
 		return fmt.Errorf("error watching media: %w", err)
 	}
@@ -99,7 +100,7 @@ func parsePayload(request *http.Request) (*plex.Payload, error) {
 	return &payload, nil
 }
 
-func watchMedia(payload *plex.Payload, traktClient *trakt.Trakt) error {
+func watchMedia(payload *plex.Payload, traktClient *trakt.Trakt, cfg *config.Config) error {
 	var err error
 
 	switch payload.Type() {
@@ -107,6 +108,11 @@ func watchMedia(payload *plex.Payload, traktClient *trakt.Trakt) error {
 		err = traktClient.WatchEpisode(payload.IDs())
 	case plex.MovieType:
 		err = traktClient.WatchMovie(payload.IDs())
+		if err != nil {
+			return err
+		}
+
+		err = notifier.NotifyMovieScrobble(cfg.MovieScrobbleWebhookURL)
 	default:
 		err = fmt.Errorf("unrecognized media type %s", payload.Type())
 	}

@@ -9,12 +9,13 @@ import (
 const defaultPort = "8080"
 
 type Config struct {
-	TraktClientID    string
-	TraktAccessToken string
-	PlexServerUUIDs  []string
-	PlexUsername     string
-	Port             string
-	ErrorWebhookURL  string
+	TraktClientID           string
+	TraktAccessToken        string
+	PlexServerUUIDs         []string
+	PlexUsername            string
+	Port                    string
+	ErrorWebhookURL         string
+	MovieScrobbleWebhookURL string
 }
 
 func FromEnv() (*Config, error) {
@@ -48,13 +49,19 @@ func FromEnv() (*Config, error) {
 		return nil, err
 	}
 
+	movieScrobbleWebhookURL, err := getEnvString("MOVIE_SCROBBLE_WEBHOOK_URL")
+	if err != nil {
+		movieScrobbleWebhookURL = ""
+	}
+
 	return &Config{
-		TraktClientID:    traktClientID,
-		TraktAccessToken: traktAccessToken,
-		PlexServerUUIDs:  plexServerUUIDs,
-		PlexUsername:     plexUsername,
-		Port:             port,
-		ErrorWebhookURL:  errorWebhookURL,
+		TraktClientID:           traktClientID,
+		TraktAccessToken:        traktAccessToken,
+		PlexServerUUIDs:         plexServerUUIDs,
+		PlexUsername:            plexUsername,
+		Port:                    port,
+		ErrorWebhookURL:         errorWebhookURL,
+		MovieScrobbleWebhookURL: movieScrobbleWebhookURL,
 	}, nil
 }
 

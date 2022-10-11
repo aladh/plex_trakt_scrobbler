@@ -75,6 +75,7 @@ cloud-run:
       --set-env-vars PLEX_SERVER_UUIDS=$PLEX_SERVER_UUIDS
       --set-env-vars PLEX_USERNAME=$PLEX_USERNAME
       --set-env-vars ERROR_WEBHOOK_URL=$ERROR_WEBHOOK_URL
+      --set-env-vars MOVIE_SCROBBLE_WEBHOOK_URL=$MOVIE_SCROBBLE_WEBHOOK_URL
   after_script:
     - gcloud container images delete $DESTINATION_IMAGE --force-delete-tags
   environment:
