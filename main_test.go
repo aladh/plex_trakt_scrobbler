@@ -19,8 +19,9 @@ func TestWatchMovieWebhook(t *testing.T) {
 		t.Skip("End to end tests are not enabled")
 	}
 
-	// Start server
+	// Start server and wait for it to be ready
 	go main()
+	time.Sleep(1 * time.Second)
 
 	cfg, err := config.FromEnv()
 	if err != nil {
