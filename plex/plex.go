@@ -20,6 +20,7 @@ type Metadata struct {
 		URI string `json:"id"`
 	} `json:"Guid"`
 	LibrarySectionType string
+	Title              string
 
 	// This isn't used but the JSON parsing doesn't work without it since it's case insensitive
 	// https://github.com/golang/go/issues/14750
