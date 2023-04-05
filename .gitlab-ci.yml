@@ -23,7 +23,7 @@ lint:
 
 end-to-end:
   stage: test
-  image: golang:1.19-bullseye
+  image: golang:1.20-bullseye
   variables:
     ENABLE_E2E_TESTS: 1
     PLEX_SERVER_UUIDS: test-uuid
