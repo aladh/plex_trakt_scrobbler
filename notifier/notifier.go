@@ -30,10 +30,10 @@ func notifyMovieScrobble(webhookURL string) error {
 	}
 
 	resp, err := http.Post(webhookURL, "text/plain", strings.NewReader(""))
-	defer resp.Body.Close()
 	if err != nil {
 		return fmt.Errorf("error sending request: %w", err)
 	}
+	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusCreated {
 		return fmt.Errorf("bad response from endpoint: %s", resp.Status)
