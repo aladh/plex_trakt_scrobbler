@@ -5,9 +5,20 @@ import (
 	"log"
 	"net/http"
 	"strings"
+
+	"github.com/aladh/plex_trakt_scrobbler/config"
+	"github.com/aladh/plex_trakt_scrobbler/plex"
 )
 
-func NotifyMovieScrobble(webhookURL string) error {
+func NotifyScrobble(cfg *config.Config, payloadType plex.PayloadType) error {
+	if payloadType == plex.MovieType {
+		return notifyMovieScrobble(cfg.MovieScrobbleWebhookURL)
+	}
+
+	return nil
+}
+
+func notifyMovieScrobble(webhookURL string) error {
 	if len(webhookURL) == 0 {
 		log.Println("no movie scrobble URL specified")
 		return nil

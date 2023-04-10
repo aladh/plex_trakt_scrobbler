@@ -4,9 +4,11 @@ import (
 	"regexp"
 )
 
-const ShowType = "show"
-const MovieType = "movie"
+const ShowType = PayloadType("show")
+const MovieType = PayloadType("movie")
 const scrobbleEvent = "media.scrobble"
+
+type PayloadType string
 
 type Payload struct {
 	Account  Account
@@ -37,8 +39,12 @@ type Account struct {
 
 var idURIRegex = regexp.MustCompile(`(\w*)://(\w*)`)
 
-func (p *Payload) Type() string {
-	return p.Metadata.LibrarySectionType
+func (p PayloadType) String() string {
+	return string(p)
+}
+
+func (p *Payload) Type() PayloadType {
+	return PayloadType(p.Metadata.LibrarySectionType)
 }
 
 func (p *Payload) IDs() map[string]string {
