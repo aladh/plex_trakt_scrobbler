@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-type Trakt struct {
+type Client struct {
 	clientID    string
 	accessToken string
 	client      http.Client
@@ -22,11 +22,11 @@ type response struct {
 	StatusCode int
 }
 
-func New(clientID string, accessToken string) *Trakt {
-	return &Trakt{clientID: clientID, accessToken: accessToken, client: http.Client{}}
+func NewClient(clientID string, accessToken string) *Client {
+	return &Client{clientID: clientID, accessToken: accessToken, client: http.Client{}}
 }
 
-func (t *Trakt) WatchEpisode(ids map[string]string) error {
+func (t *Client) WatchEpisode(ids map[string]string) error {
 	reqBody, err := json.Marshal(watchEpisodeRequest(ids, time.Now().UTC()))
 	if err != nil {
 		return fmt.Errorf("error marshalling trakt request: %w", err)
@@ -52,7 +52,7 @@ func (t *Trakt) WatchEpisode(ids map[string]string) error {
 	return nil
 }
 
-func (t *Trakt) WatchMovie(ids map[string]string) error {
+func (t *Client) WatchMovie(ids map[string]string) error {
 	reqBody, err := json.Marshal(watchMovieRequest(ids, time.Now().UTC()))
 	if err != nil {
 		return fmt.Errorf("error marshalling trakt request: %w", err)
@@ -78,7 +78,7 @@ func (t *Trakt) WatchMovie(ids map[string]string) error {
 	return nil
 }
 
-func (t *Trakt) LatestWatchedMovie() (WatchedMovie, error) {
+func (t *Client) LatestWatchedMovie() (WatchedMovie, error) {
 	log.Println("Getting latest watched movie")
 
 	res, err := t.request("GET", "https://api.trakt.tv/sync/history/movies?limit=1", nil)
@@ -102,7 +102,7 @@ func (t *Trakt) LatestWatchedMovie() (WatchedMovie, error) {
 	return watchedMovies[0], nil
 }
 
-func (t *Trakt) RemoveFromHistory(id int) error {
+func (t *Client) RemoveFromHistory(id int) error {
 	reqBody, err := json.Marshal(removeHistoryRequest(id))
 	if err != nil {
 		return fmt.Errorf("error marshalling trakt request: %w", err)
@@ -122,7 +122,7 @@ func (t *Trakt) RemoveFromHistory(id int) error {
 	return nil
 }
 
-func (t *Trakt) request(method string, url string, body io.Reader) (response, error) {
+func (t *Client) request(method string, url string, body io.Reader) (response, error) {
 	req, err := http.NewRequest(method, url, body)
 	if err != nil {
 		return response{}, fmt.Errorf("error creating trakt request: %w", err)

@@ -33,7 +33,7 @@ func TestWatchMovieWebhook(t *testing.T) {
 }
 
 func cleanup(t *testing.T, cfg *config.Config) {
-	traktClient := trakt.New(cfg.TraktClientID, cfg.TraktAccessToken)
+	traktClient := trakt.NewClient(cfg.TraktClientID, cfg.TraktAccessToken)
 	watchedMovie, err := traktClient.LatestWatchedMovie()
 	if err != nil {
 		t.Fatalf("error getting latest watchedMovie: %s", err)

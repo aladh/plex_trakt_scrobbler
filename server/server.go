@@ -19,7 +19,7 @@ import (
 const postMethod = "POST"
 
 func Handler(cfg *config.Config) func(http.ResponseWriter, *http.Request) {
-	traktClient := trakt.New(cfg.TraktClientID, cfg.TraktAccessToken)
+	traktClient := trakt.NewClient(cfg.TraktClientID, cfg.TraktAccessToken)
 
 	return func(writer http.ResponseWriter, request *http.Request) {
 		ctx := context.WithValue(request.Context(), contextkeys.Config, cfg)
@@ -126,7 +126,7 @@ func parsePayload(request *http.Request) (*plex.Payload, error) {
 
 func processScrobble(ctx context.Context) error {
 	payload := ctx.Value(contextkeys.Payload).(*plex.Payload)
-	traktClient := ctx.Value(contextkeys.TraktClient).(*trakt.Trakt)
+	traktClient := ctx.Value(contextkeys.TraktClient).(*trakt.Client)
 
 	var err error
 
