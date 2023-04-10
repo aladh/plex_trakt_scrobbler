@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/aladh/plex_trakt_scrobbler/config"
-	contextkeys "github.com/aladh/plex_trakt_scrobbler/context"
+	"github.com/aladh/plex_trakt_scrobbler/contextkeys"
 	"github.com/aladh/plex_trakt_scrobbler/plex"
 )
 
