@@ -65,9 +65,9 @@ func processRequest(cfg *config.Config, traktClient *trakt.Trakt, request *http.
 		return fmt.Errorf("error processing request for title %s: payload has no IDs", payload.Metadata.Title)
 	}
 
-	err = watchMedia(payload, traktClient, cfg)
+	err = processScrobble(payload, traktClient, cfg)
 	if err != nil {
-		return fmt.Errorf("error watching media: %w", err)
+		return fmt.Errorf("error processing scrobble: %w", err)
 	}
 
 	return nil
@@ -105,7 +105,7 @@ func parsePayload(request *http.Request) (*plex.Payload, error) {
 	return &payload, nil
 }
 
-func watchMedia(payload *plex.Payload, traktClient *trakt.Trakt, cfg *config.Config) error {
+func processScrobble(payload *plex.Payload, traktClient *trakt.Trakt, cfg *config.Config) error {
 	var err error
 
 	switch payload.Type() {
