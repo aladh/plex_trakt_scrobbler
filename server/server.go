@@ -9,7 +9,7 @@ import (
 
 	"github.com/aladh/plex_trakt_scrobbler/config"
 	contextkeys "github.com/aladh/plex_trakt_scrobbler/context"
-	"github.com/aladh/plex_trakt_scrobbler/errors"
+	"github.com/aladh/plex_trakt_scrobbler/errortracker"
 	"github.com/aladh/plex_trakt_scrobbler/notifier"
 	"github.com/aladh/plex_trakt_scrobbler/plex"
 	"github.com/aladh/plex_trakt_scrobbler/trakt"
@@ -38,7 +38,7 @@ func Handler(cfg *config.Config) func(http.ResponseWriter, *http.Request) {
 			log.Println(err)
 			log.Printf("Request payload: %s\n", request.FormValue("payload"))
 
-			err = errors.Track(cfg.ErrorWebhookURL, err)
+			err = errortracker.Track(cfg.ErrorWebhookURL, err)
 			if err != nil {
 				log.Printf("error tracking error: %s\n", err)
 			}
