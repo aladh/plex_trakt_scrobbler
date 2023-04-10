@@ -1,17 +1,22 @@
 package notifier
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
 	"strings"
 
 	"github.com/aladh/plex_trakt_scrobbler/config"
+	contextkeys "github.com/aladh/plex_trakt_scrobbler/context"
 	"github.com/aladh/plex_trakt_scrobbler/plex"
 )
 
-func NotifyScrobble(cfg *config.Config, payloadType plex.PayloadType) error {
-	if payloadType == plex.MovieType {
+func NotifyScrobble(ctx context.Context) error {
+	cfg := ctx.Value(contextkeys.Config).(*config.Config)
+	payload := ctx.Value(contextkeys.Payload).(*plex.Payload)
+
+	if payload.Type() == plex.MovieType {
 		return notifyMovieScrobble(cfg.MovieScrobbleWebhookURL)
 	}
 
@@ -25,11 +30,12 @@ func notifyMovieScrobble(webhookURL string) error {
 	}
 
 	resp, err := http.Post(webhookURL, "text/plain", strings.NewReader(""))
+	defer resp.Body.Close()
 	if err != nil {
 		return fmt.Errorf("error sending request: %w", err)
 	}
 
-	if resp.StatusCode != 201 {
+	if resp.StatusCode != http.StatusCreated {
 		return fmt.Errorf("bad response from endpoint: %s", resp.Status)
 	}
 

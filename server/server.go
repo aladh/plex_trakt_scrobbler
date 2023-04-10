@@ -1,12 +1,14 @@
 package server
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/aladh/plex_trakt_scrobbler/config"
+	contextkeys "github.com/aladh/plex_trakt_scrobbler/context"
 	"github.com/aladh/plex_trakt_scrobbler/errors"
 	"github.com/aladh/plex_trakt_scrobbler/notifier"
 	"github.com/aladh/plex_trakt_scrobbler/plex"
@@ -19,8 +21,19 @@ const postMethod = "POST"
 func Handler(cfg *config.Config) func(http.ResponseWriter, *http.Request) {
 	traktClient := trakt.New(cfg.TraktClientID, cfg.TraktAccessToken)
 
-	return func(w http.ResponseWriter, request *http.Request) {
-		err := processRequest(cfg, traktClient, request)
+	return func(writer http.ResponseWriter, request *http.Request) {
+		ctx := context.WithValue(request.Context(), contextkeys.Config, cfg)
+		ctx = context.WithValue(ctx, contextkeys.TraktClient, traktClient)
+		ctx = context.WithValue(ctx, contextkeys.Request, request)
+
+		// Plex webhooks are always POST so we can ignore other methods
+		if request.Method != postMethod {
+			log.Printf("Invalid request method: %s, expected POST", request.Method)
+			http.Error(writer, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
+			return
+		}
+
+		err := processRequest(ctx)
 		if err != nil {
 			log.Println(err)
 			log.Printf("Request payload: %s\n", request.FormValue("payload"))
@@ -30,26 +43,24 @@ func Handler(cfg *config.Config) func(http.ResponseWriter, *http.Request) {
 				log.Printf("error tracking error: %s\n", err)
 			}
 
-			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			http.Error(writer, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}
 
-		w.WriteHeader(http.StatusNoContent)
+		writer.WriteHeader(http.StatusNoContent)
 	}
 }
 
-func processRequest(cfg *config.Config, traktClient *trakt.Trakt, request *http.Request) error {
-	// Plex webhooks are always POST
-	if request.Method != postMethod {
-		return nil
-	}
+func processRequest(ctx context.Context) error {
+	request := ctx.Value(contextkeys.Request).(*http.Request)
 
 	payload, err := parsePayload(request)
 	if err != nil {
 		return fmt.Errorf("error parsing webhook payload: %w", err)
 	}
+	ctx = context.WithValue(ctx, contextkeys.Payload, payload)
 
-	if !isAuthorized(payload, cfg.PlexServerUUIDs, cfg.PlexUsername) {
+	if !isAuthorized(ctx) {
 		return nil
 	}
 
@@ -65,12 +76,12 @@ func processRequest(cfg *config.Config, traktClient *trakt.Trakt, request *http.
 		return fmt.Errorf("error processing request for title %s: payload has no IDs", payload.Metadata.Title)
 	}
 
-	err = processScrobble(payload, traktClient)
+	err = processScrobble(ctx)
 	if err != nil {
 		return fmt.Errorf("error processing scrobble: %w", err)
 	}
 
-	err = notifier.NotifyScrobble(cfg, payload.Type())
+	err = notifier.NotifyScrobble(ctx)
 	if err != nil {
 		return fmt.Errorf("error notifying scrobble: %w", err)
 	}
@@ -78,15 +89,18 @@ func processRequest(cfg *config.Config, traktClient *trakt.Trakt, request *http.
 	return nil
 }
 
-func isAuthorized(payload *plex.Payload, allowedUUIDs []string, allowedUsername string) bool {
+func isAuthorized(ctx context.Context) bool {
+	payload := ctx.Value(contextkeys.Payload).(*plex.Payload)
+	cfg := ctx.Value(contextkeys.Config).(*config.Config)
+
 	// Check that the webhook is coming from an allowed server
-	if !util.SliceContains(allowedUUIDs, payload.ServerUUID()) {
+	if !util.SliceContains(cfg.PlexServerUUIDs, payload.ServerUUID()) {
 		log.Printf("Unauthorized request from server UUID: %s\n", payload.ServerUUID())
 		return false
 	}
 
 	// Only scrobble plays from the specified user
-	if payload.Username() != allowedUsername {
+	if payload.Username() != cfg.PlexUsername {
 		log.Printf("User not recognized: %s\n", payload.Username())
 		return false
 	}
@@ -110,7 +124,10 @@ func parsePayload(request *http.Request) (*plex.Payload, error) {
 	return &payload, nil
 }
 
-func processScrobble(payload *plex.Payload, traktClient *trakt.Trakt) error {
+func processScrobble(ctx context.Context) error {
+	payload := ctx.Value(contextkeys.Payload).(*plex.Payload)
+	traktClient := ctx.Value(contextkeys.TraktClient).(*trakt.Trakt)
+
 	var err error
 
 	switch payload.Type() {
