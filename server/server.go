@@ -19,7 +19,7 @@ const postMethod = "POST"
 func Handler(cfg *config.Config) func(http.ResponseWriter, *http.Request) {
 	traktClient := trakt.New(cfg.TraktClientID, cfg.TraktAccessToken)
 
-	return func(_ http.ResponseWriter, request *http.Request) {
+	return func(w http.ResponseWriter, request *http.Request) {
 		err := processRequest(cfg, traktClient, request)
 		if err != nil {
 			log.Println(err)
@@ -29,7 +29,12 @@ func Handler(cfg *config.Config) func(http.ResponseWriter, *http.Request) {
 			if err != nil {
 				log.Printf("error tracking error: %s\n", err)
 			}
+
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			return
 		}
+
+		w.WriteHeader(http.StatusNoContent)
 	}
 }
 
