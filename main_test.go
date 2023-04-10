@@ -81,7 +81,7 @@ func sendRequest(t *testing.T, cfg *config.Config) {
 		t.Fatalf("error making request to app server: %s", err)
 	}
 
-	if response.StatusCode != 200 {
+	if response.StatusCode != http.StatusNoContent {
 		t.Fatalf("bad response from app server")
 	}
 }
