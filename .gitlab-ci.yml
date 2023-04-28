@@ -11,7 +11,7 @@ include:
 
 container_scanning:
   variables:
-    DOCKER_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+    CS_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
 
 lint:
   stage: test
