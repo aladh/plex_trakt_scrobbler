@@ -28,32 +28,41 @@ func TestWatchMovieWebhook(t *testing.T) {
 		t.Fatalf("error loading config from env: %s", err)
 	}
 
-	sendRequest(t, cfg)
-	cleanup(t, cfg)
+	sendWebhook(t, cfg)
+	verifyAndCleanup(t, cfg)
 }
 
-func cleanup(t *testing.T, cfg *config.Config) {
+func verifyAndCleanup(t *testing.T, cfg *config.Config) {
 	traktClient := trakt.NewClient(cfg.TraktClientID, cfg.TraktAccessToken)
-	watchedMovie, err := traktClient.LatestWatchedMovie()
+	watchedMovies, err := traktClient.LatestWatchedMovies()
 	if err != nil {
-		t.Fatalf("error getting latest watchedMovie: %s", err)
+		t.Fatalf("error getting latest watchedMovies: %s", err)
 	}
 
 	expectedTitle := "McHale's Navy"
-	if watchedMovie.Movie.Title != expectedTitle {
-		t.Fatalf("title = %s, want %s", watchedMovie.Movie.Title, expectedTitle)
+
+	var expectedMovie trakt.WatchedMovie
+	for _, movie := range watchedMovies {
+		if movie.Movie.Title == expectedTitle {
+			expectedMovie = movie
+			break
+		}
+	}
+
+	if expectedMovie.Movie.Title != expectedTitle {
+		t.Fatalf("title = %s, want %s", expectedMovie.Movie.Title, expectedTitle)
 	}
 
 	// Comply with rate limiting
 	time.Sleep(1 * time.Second)
 
-	err = traktClient.RemoveFromHistory(watchedMovie.ID)
+	err = traktClient.RemoveFromHistory(expectedMovie.ID)
 	if err != nil {
 		t.Fatalf("error removing from history: %s", err)
 	}
 }
 
-func sendRequest(t *testing.T, cfg *config.Config) {
+func sendWebhook(t *testing.T, cfg *config.Config) {
 	payload, err := os.ReadFile("testdata/webhook.json")
 	if err != nil {
 		t.Fatalf("error opening fixture file: %s", err)

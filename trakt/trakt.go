@@ -78,16 +78,16 @@ func (t *Client) WatchMovie(ids map[string]string) error {
 	return nil
 }
 
-func (t *Client) LatestWatchedMovie() (WatchedMovie, error) {
+func (t *Client) LatestWatchedMovies() ([]WatchedMovie, error) {
 	log.Println("Getting latest watched movie")
 
-	res, err := t.request("GET", "https://api.trakt.tv/sync/history/movies?limit=1", nil)
+	res, err := t.request("GET", "https://api.trakt.tv/sync/history/movies?limit=5", nil)
 	if err != nil {
-		return WatchedMovie{}, fmt.Errorf("error making LatestWatchedMovie request: %w", err)
+		return []WatchedMovie{}, fmt.Errorf("error making LatestWatchedMovies request: %w", err)
 	}
 
 	if res.StatusCode != 200 {
-		return WatchedMovie{}, fmt.Errorf("received bad response code %d", res.StatusCode)
+		return []WatchedMovie{}, fmt.Errorf("received bad response code %d", res.StatusCode)
 	}
 
 	log.Printf("Got response: %s\n", string(res.Body))
@@ -96,10 +96,10 @@ func (t *Client) LatestWatchedMovie() (WatchedMovie, error) {
 
 	err = json.Unmarshal(res.Body, &watchedMovies)
 	if err != nil {
-		return WatchedMovie{}, fmt.Errorf("error parsing JSON response: %w", err)
+		return []WatchedMovie{}, fmt.Errorf("error parsing JSON response: %w", err)
 	}
 
-	return watchedMovies[0], nil
+	return watchedMovies, nil
 }
 
 func (t *Client) RemoveFromHistory(id int) error {
