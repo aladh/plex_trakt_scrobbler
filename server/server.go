@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"slices"
 
 	"github.com/aladh/plex_trakt_scrobbler/config"
 	"github.com/aladh/plex_trakt_scrobbler/contextkeys"
@@ -13,7 +14,6 @@ import (
 	"github.com/aladh/plex_trakt_scrobbler/notifier"
 	"github.com/aladh/plex_trakt_scrobbler/plex"
 	"github.com/aladh/plex_trakt_scrobbler/trakt"
-	"github.com/aladh/plex_trakt_scrobbler/util"
 )
 
 const postMethod = "POST"
@@ -94,7 +94,7 @@ func isAuthorized(ctx context.Context) bool {
 	cfg := ctx.Value(contextkeys.Config).(*config.Config)
 
 	// Check that the webhook is coming from an allowed server
-	if !util.SliceContains(cfg.PlexServerUUIDs, payload.ServerUUID()) {
+	if !slices.Contains(cfg.PlexServerUUIDs, payload.ServerUUID()) {
 		log.Printf("Unauthorized request from server UUID: %s\n", payload.ServerUUID())
 		return false
 	}
