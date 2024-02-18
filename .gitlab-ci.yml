@@ -15,7 +15,7 @@ container_scanning:
 
 lint:
   stage: test
-  image: golangci/golangci-lint:v1.54.1
+  image: golangci/golangci-lint:v1.56.2
   script:
     - golangci-lint run -v -E gofmt -E goconst -E gocritic -E gocognit -E gocyclo
   except:
@@ -23,7 +23,7 @@ lint:
 
 end-to-end:
   stage: test
-  image: golang:1.21-bookworm
+  image: golang:1.22-bookworm
   variables:
     ENABLE_E2E_TESTS: 1
     PLEX_SERVER_UUIDS: test-uuid
